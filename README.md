@@ -1,6 +1,6 @@
 # ComfyUI Workflow Collection
 
-A curated collection of ComfyUI workflows for various image and video generation tasks.
+A curated collection of ComfyUI workflows known to work with NVIDIA GTX 1050ti, 4VRAM, 8RAM, 16SWAP for various image and video generation tasks.
 
 ## Workflows
 
