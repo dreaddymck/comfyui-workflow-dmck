@@ -9,6 +9,8 @@ A curated collection of ComfyUI workflows known to work with NVIDIA GTX 1050ti, 
 
 ### Video Generation
 - **LTXV-I2V-2b-0.9.x-distilled looping sampler.json** - Image-to-video workflow using the LTXV distilled model with looping sampler capabilities
+- **I2V LTXV first last latest v1.json**
+- **I2V_LTXV_First_Last_SamplerCustomAdvanced_v2**
 
 ### Image Processing
 - **UPSCALE REMOVE BACKGROUND AND MASK.json** - Upscaling workflow with automated background removal and masking
