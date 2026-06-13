@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LTXV Prompt Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2330;
+    --border: rgba(255,255,255,0.12);
+    --border2: rgba(255,255,255,0.22);
+    --accent: #58a6ff;
+    --accent2: #79c0ff;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --muted2: #6e7681;
+    --mono: 'DM Sans', sans-serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+  body { min-height: 100vh; }
+
+  /* layout */
+  .shell { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+
+  /* sidebar */
+  aside {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .logo-sub {
+    font-size: 11px;
+    color: var(--muted2);
+    letter-spacing: .06em;
+    margin-bottom: 2rem;
+    font-family: var(--mono);
+  }
+  .side-section { margin-bottom: 1.5rem; }
+  .side-label {
+    font-size: 9px;
+    font-family: var(--mono);
+    font-weight: 700;
+    letter-spacing: .18em;
+    color: var(--muted2);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    padding-left: 2px;
+  }
+  .chip-grid { display: flex; flex-direction: column; gap: 2px; }
+  .chip {
+    font-size: 12px;
+    font-family: var(--mono);
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .12s;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    user-select: none;
+  }
+  .chip:hover { background: var(--surface2); color: var(--text); }
+  .chip.on { background: rgba(88,166,255,0.1); border-color: rgba(88,166,255,0.35); color: var(--accent); }
+  .chip .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted2); flex-shrink: 0; transition: background .12s; }
+  .chip.on .dot { background: var(--accent); }
+
+  /* main */
+  main { padding: 2.5rem 2rem 4rem; max-width: 820px; }
+
+  .page-title {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 2rem; }
+
+  .field { margin-bottom: 1.25rem; }
+  .field-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    font-weight: 700;
+    letter-spacing: .15em;
+    color: var(--muted2);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+  textarea, input[type=text] {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    resize: vertical;
+    outline: none;
+    transition: border-color .15s;
+    line-height: 1.6;
+  }
+  textarea:focus, input[type=text]:focus { border-color: rgba(184,255,87,0.4); }
+  textarea { min-height: 72px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* token counter */
+  .token-bar { margin-bottom: 1.5rem; }
+  .token-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .token-label { font-size: 10px; font-family: var(--mono); color: var(--muted); letter-spacing: .1em; }
+  .token-count { font-size: 11px; font-family: var(--mono); color: var(--muted); }
+  .token-count.warn { color: #ffb347; }
+  .token-count.over { color: #ff5757; }
+  .bar-track { height: 3px; background: var(--border2); border-radius: 2px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .25s, background .25s; }
+
+  /* output */
+  .out-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 1.5rem;
+  }
+  .out-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .out-title { font-size: 10px; font-family: var(--mono); font-weight: 700; letter-spacing: .15em; color: var(--muted); text-transform: uppercase; }
+  .out-body {
+    padding: 14px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.75;
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 80px;
+  }
+  .out-body .ph { color: var(--muted2); font-style: italic; }
+
+  /* system prompt panel */
+  .sys-wrap {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 2px solid rgba(121,192,255,0.4);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 1rem;
+  }
+  .sys-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sys-title { font-size: 10px; font-family: var(--mono); font-weight: 700; letter-spacing: .15em; color: var(--accent2); text-transform: uppercase; }
+  .sys-body {
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: #aaa;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* buttons */
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.25rem; }
+  .btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    padding: 9px 16px;
+    border-radius: 5px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all .12s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .btn:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+  .btn:active { transform: scale(.97); }
+  .btn.primary { background: var(--accent); color: #0d1117; border-color: var(--accent); }
+  .btn.primary:hover { background: #88bbff; border-color: #88bbff; }
+  .btn.copied { background: rgba(87,212,255,0.12); color: var(--accent2); border-color: rgba(87,212,255,0.3); }
+
+  /* collapsible sys */
+  .sys-toggle { cursor: pointer; font-size: 10px; font-family: var(--mono); color: var(--muted2); border: none; background: none; letter-spacing: .1em; text-transform: uppercase; }
+  .sys-toggle:hover { color: var(--muted); }
+  .sys-collapsed { display: none; }
+
+  /* divider */
+  .divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--muted2); border-radius: 4px; }
+
+  @media (max-width: 700px) {
+    .shell { grid-template-columns: 1fr; }
+    aside { position: static; height: auto; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<aside>
+  <div class="logo">LTXV // 2B</div>
+  <div class="logo-sub">prompt engineer</div>
+
+  <div class="side-section">
+    <div class="side-label">Camera</div>
+    <div class="chip-grid" id="cam">
+      <div class="chip" data-v="static shot"><span class="dot"></span>static</div>
+      <div class="chip" data-v="slow push-in"><span class="dot"></span>push-in</div>
+      <div class="chip" data-v="slow pull-out"><span class="dot"></span>pull-out</div>
+      <div class="chip" data-v="slow pan left"><span class="dot"></span>pan left</div>
+      <div class="chip" data-v="slow pan right"><span class="dot"></span>pan right</div>
+      <div class="chip" data-v="gentle dolly forward"><span class="dot"></span>dolly</div>
+      <div class="chip" data-v="tracking shot"><span class="dot"></span>tracking</div>
+      <div class="chip" data-v="handheld camera movement"><span class="dot"></span>handheld</div>
+      <div class="chip" data-v="aerial drone shot"><span class="dot"></span>aerial</div>
+      <div class="chip" data-v="orbit around subject"><span class="dot"></span>orbit</div>
+    </div>
+  </div>
+
+  <div class="side-section">
+    <div class="side-label">Framing</div>
+    <div class="chip-grid" id="lens">
+      <div class="chip" data-v="extreme close-up"><span class="dot"></span>ECU</div>
+      <div class="chip" data-v="close-up"><span class="dot"></span>close-up</div>
+      <div class="chip" data-v="medium shot"><span class="dot"></span>medium</div>
+      <div class="chip" data-v="medium wide shot"><span class="dot"></span>med. wide</div>
+      <div class="chip" data-v="wide shot"><span class="dot"></span>wide</div>
+      <div class="chip" data-v="extreme wide shot"><span class="dot"></span>EWS</div>
+      <div class="chip" data-v="low angle"><span class="dot"></span>low angle</div>
+      <div class="chip" data-v="high angle"><span class="dot"></span>high angle</div>
+      <div class="chip" data-v="dutch angle"><span class="dot"></span>dutch</div>
+      <div class="chip" data-v="bird's-eye view"><span class="dot"></span>birds-eye</div>
+      <div class="chip" data-v="3/4 profile view"><span class="dot"></span>3/4 profile</div>
+      <div class="chip" data-v="side profile"><span class="dot"></span>side profile</div>
+      <div class="chip" data-v="candid shot"><span class="dot"></span>candid</div>
+    </div>
+  </div>
+
+  <div class="side-section">
+    <div class="side-label">Lighting</div>
+    <div class="chip-grid" id="light">
+      <div class="chip" data-v="golden hour sunlight"><span class="dot"></span>golden hour</div>
+      <div class="chip" data-v="overcast diffused light"><span class="dot"></span>overcast</div>
+      <div class="chip" data-v="neon-lit night scene"><span class="dot"></span>neon</div>
+      <div class="chip" data-v="warm candlelight"><span class="dot"></span>candlelight</div>
+      <div class="chip" data-v="hard directional sunlight with deep shadows"><span class="dot"></span>hard shadows</div>
+      <div class="chip" data-v="cinematic backlight rim lighting"><span class="dot"></span>backlit</div>
+      <div class="chip" data-v="foggy soft ambient light"><span class="dot"></span>foggy ambient</div>
+      <div class="chip" data-v="underwater caustic light"><span class="dot"></span>underwater</div>
+      <div class="chip" data-v="moonlit night"><span class="dot"></span>moonlit</div>
+      <div class="chip" data-v="volumetric god rays"><span class="dot"></span>god rays</div>
+    </div>
+  </div>
+
+  <div class="side-section">
+    <div class="side-label">Style</div>
+    <div class="chip-grid" id="style">
+      <div class="chip" data-v="photorealistic"><span class="dot"></span>photoreal</div>
+      <div class="chip" data-v="cinematic 35mm film grain"><span class="dot"></span>35mm grain</div>
+      <div class="chip" data-v="anime cel-shaded"><span class="dot"></span>anime</div>
+      <div class="chip" data-v="stop-motion claymation"><span class="dot"></span>claymation</div>
+      <div class="chip" data-v="watercolour painterly style"><span class="dot"></span>watercolour</div>
+      <div class="chip" data-v="gritty documentary style"><span class="dot"></span>documentary</div>
+      <div class="chip" data-v="noir high-contrast black and white"><span class="dot"></span>noir B&W</div>
+      <div class="chip" data-v="dreamlike surreal imagery"><span class="dot"></span>surreal</div>
+      <div class="chip" data-v="vintage VHS footage aesthetic"><span class="dot"></span>VHS</div>
+      <div class="chip" data-v="hyper-detailed photorealistic 8K CGI"><span class="dot"></span>8K CG</div>
+    </div>
+  </div>
+
+  <div class="side-section">
+    <div class="side-label">Motion</div>
+    <div class="chip-grid" id="motion">
+      <div class="chip" data-v="smooth slow motion"><span class="dot"></span>slow-mo</div>
+      <div class="chip" data-v="natural real-time motion"><span class="dot"></span>real-time</div>
+      <div class="chip" data-v="fast-paced energetic motion"><span class="dot"></span>fast-paced</div>
+      <div class="chip" data-v="time-lapse motion"><span class="dot"></span>time-lapse</div>
+      <div class="chip" data-v="subtle micro-motion only"><span class="dot"></span>micro-motion</div>
+    </div>
+  </div>
+</aside>
+
+<main>
+  <div class="page-title">prompt builder</div>
+  <div class="page-sub">Structured prompts for Gemma 4 → LTXV 2B distilled pipeline</div>
+
+  <div class="field">
+    <label class="field-label" for="subject">Subject / action *</label>
+    <textarea id="subject" rows="3" placeholder="e.g. A hooded figure walks slowly through a rain-soaked neon alley at night, puddles reflecting coloured lights"></textarea>
+    <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px" id="gaze">
+      <span style="font-size:9px;font-family:var(--mono);color:var(--muted2);letter-spacing:.1em;align-self:center;text-transform:uppercase">gaze →</span>
+      <div class="chip" style="font-size:11px;padding:4px 9px" data-v="reading a book"><span class="dot"></span>reading</div>
+      <div class="chip" style="font-size:11px;padding:4px 9px" data-v="looking down at a desk"><span class="dot"></span>looking down</div>
+      <div class="chip" style="font-size:11px;padding:4px 9px" data-v="staring out a window"><span class="dot"></span>staring out window</div>
+      <div class="chip" style="font-size:11px;padding:4px 9px" data-v="gazing into the distance"><span class="dot"></span>gazing away</div>
+      <div class="chip" style="font-size:11px;padding:4px 9px" data-v="eyes closed"><span class="dot"></span>eyes closed</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="field">
+      <label class="field-label" for="env">Environment / setting</label>
+      <textarea id="env" rows="2" placeholder="e.g. dense jungle, abandoned factory, open ocean"></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label" for="extra">Mood / colour / texture</label>
+      <textarea id="extra" rows="2" placeholder="e.g. desaturated palette, heavy fog, 1970s aesthetic"></textarea>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label" for="neg">Negative guidance</label>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px" id="neg-chips">
+      <span style="font-size:9px;font-family:var(--mono);color:var(--muted2);letter-spacing:.1em;align-self:center;text-transform:uppercase">quick →</span>
+      <div class="chip neg-chip" style="font-size:11px;padding:4px 9px" data-v="looking at viewer"><span class="dot"></span>looking at viewer</div>
+      <div class="chip neg-chip" style="font-size:11px;padding:4px 9px" data-v="eye contact"><span class="dot"></span>eye contact</div>
+      <div class="chip neg-chip" style="font-size:11px;padding:4px 9px" data-v="staring at camera"><span class="dot"></span>staring at camera</div>
+      <div class="chip neg-chip" style="font-size:11px;padding:4px 9px" data-v="facing viewer"><span class="dot"></span>facing viewer</div>
+    </div>
+    <textarea id="neg" rows="2" placeholder="blur, watermark, text overlays, distorted anatomy, oversaturated, shaky motion"></textarea>
+  </div>
+
+  <div class="token-bar">
+    <div class="token-row">
+      <span class="token-label">Estimated positive tokens</span>
+      <span class="token-count" id="tok-count">0 / 200</span>
+    </div>
+    <div class="bar-track"><div class="bar-fill" id="tok-bar" style="width:0%"></div></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn primary" onclick="build()">▸ build prompt</button>
+    <button class="btn" id="copy-btn" onclick="copyOut()">⎘ copy</button>
+    <button class="btn" onclick="resetAll()">↺ reset</button>
+  </div>
+
+  <div class="out-wrap" id="out-wrap">
+    <div class="out-header">
+      <span class="out-title">positive prompt</span>
+      <span style="font-size:11px;font-family:var(--mono);color:var(--muted2)" id="tok-out"></span>
+    </div>
+    <div class="out-body" id="out"><span class="ph">// build your prompt above</span></div>
+  </div>
+
+  <div class="sys-wrap" id="sys-wrap" style="display:none">
+    <div class="sys-header">
+      <span class="sys-title">system prompt — Gemma 4 guidance</span>
+      <button class="sys-toggle" onclick="toggleSys()">▾ collapse</button>
+    </div>
+    <div class="sys-body" id="sys-body"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div style="font-size:11px;font-family:var(--mono);color:var(--muted2);line-height:1.8">
+    <div style="color:var(--muted);margin-bottom:6px;letter-spacing:.08em">// notes</div>
+    Front-load subject + action — LTXV 2B distilled weights early tokens in temporal planning.<br>
+    Keep positive prompt under 200 tokens — model degrades with long or contradictory prompts.<br>
+    Separate negative conditioning via ComfyUI <em>negative</em> conditioning node.<br>
+    Prefer comma-separated visual phrases over full prose sentences.
+  </div>
+</main>
+</div>
+
+<script>
+const SYS_TEMPLATE = `You are a video generation prompt engineer specialising in LTX-Video 2B distilled model (LTXV). Your task is to refine and expand user-provided video generation prompts for maximum quality and temporal consistency.
+
+CORE RULES:
+- Always front-load the primary subject and action at the start of the prompt
+- Keep the positive prompt under 200 tokens total
+- Use comma-separated visual descriptors, not full prose sentences
+- Be concrete and visual — avoid abstract emotional language
+- Describe continuous motion explicitly; the model cannot infer implied movement
+- Avoid contradictory descriptors (e.g. both "slow-mo" and "fast-paced")
+- Never reference audio, sound, or dialogue
+
+MOTION GUIDANCE:
+- Describe camera movement and subject movement separately
+- Use cinematic language: "slow push-in", "tracking shot", "handheld drift"
+- If motion is subtle, say so explicitly: "subtle micro-motion, near-static frame"
+- Temporal consistency improves with clear scene anchoring (time of day, location type)
+
+OUTPUT FORMAT:
+Return ONLY the refined positive prompt followed by the negative prompt, separated by |||
+
+Example:
+A lone astronaut floats in zero gravity inside a dimly lit space station corridor, slow dolly forward, extreme close-up on visor reflection, volumetric light shafts from a porthole, photorealistic, cinematic 35mm grain, natural real-time motion ||| blur, watermark, text, distorted anatomy, motion blur artifacts, shaky, overexposed`;
+
+function getChips(id) {
+  return [...document.querySelectorAll('#'+id+' .chip.on')].map(c => c.dataset.v);
+}
+
+function estimateTokens(text) {
+  return Math.round(text.trim().split(/\s+/).filter(Boolean).length * 1.3);
+}
+
+function updateTokenBar(text) {
+  const t = estimateTokens(text);
+  const pct = Math.min((t / 200) * 100, 100);
+  const bar = document.getElementById('tok-bar');
+  const count = document.getElementById('tok-count');
+  bar.style.width = pct + '%';
+  bar.style.background = t > 200 ? '#ff5757' : t > 160 ? '#ffb347' : 'var(--accent)';
+  count.textContent = t + ' / 200';
+  count.className = 'token-count' + (t > 200 ? ' over' : t > 160 ? ' warn' : '');
+  return t;
+}
+
+function build() {
+  const subject = document.getElementById('subject').value.trim();
+  if (!subject) { document.getElementById('subject').focus(); return; }
+
+  const env = document.getElementById('env').value.trim();
+  const extra = document.getElementById('extra').value.trim();
+  const neg = document.getElementById('neg').value.trim();
+
+  const cam = getChips('cam');
+  const lens = getChips('lens');
+  const light = getChips('light');
+  const style = getChips('style');
+  const motion = getChips('motion');
+
+  let parts = [subject];
+  if (env) parts.push(env);
+  if (cam.length) parts.push(...cam);
+  if (lens.length) parts.push(...lens);
+  if (light.length) parts.push(...light);
+  if (style.length) parts.push(...style);
+  if (motion.length) parts.push(...motion);
+  if (extra) parts.push(extra);
+
+  const positive = parts.join(', ');
+  const t = updateTokenBar(positive);
+  document.getElementById('tok-out').textContent = '~' + t + ' tokens';
+
+  document.getElementById('out').textContent = positive;
+
+  // sys prompt
+  const sysBody = SYS_TEMPLATE;
+  document.getElementById('sys-body').textContent = sysBody;
+  document.getElementById('sys-wrap').style.display = 'block';
+
+  // store for copy
+  window._lastPrompt = positive + (neg ? '\n\nNegative: ' + neg : '');
+  window._lastSys = sysBody;
+}
+
+function copyOut() {
+  const text = window._lastPrompt || document.getElementById('out').textContent;
+  if (!text || text.includes('// build')) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    const prev = btn.textContent;
+    btn.textContent = '✓ copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = prev; btn.classList.remove('copied'); }, 1800);
+  }).catch(() => {});
+}
+
+let sysOpen = true;
+function toggleSys() {
+  const body = document.getElementById('sys-body');
+  const btn = document.querySelector('.sys-toggle');
+  sysOpen = !sysOpen;
+  body.style.display = sysOpen ? '' : 'none';
+  btn.textContent = sysOpen ? '▾ collapse' : '▸ expand';
+}
+
+function resetAll() {
+  document.getElementById('subject').value = '';
+  document.getElementById('env').value = '';
+  document.getElementById('extra').value = '';
+  document.getElementById('neg').value = '';
+  document.querySelectorAll('.chip.on').forEach(c => c.classList.remove('on'));
+  document.getElementById('out').innerHTML = '<span class="ph">// build your prompt above</span>';
+  document.getElementById('tok-bar').style.width = '0%';
+  document.getElementById('tok-count').textContent = '0 / 200';
+  document.getElementById('tok-out').textContent = '';
+  document.getElementById('sys-wrap').style.display = 'none';
+  window._lastPrompt = '';
+}
+
+// chips — sidebar multi-select
+document.querySelectorAll('#cam .chip, #lens .chip, #light .chip, #style .chip, #motion .chip').forEach(c => {
+  c.addEventListener('click', function() { this.classList.toggle('on'); });
+});
+
+// gaze chips — append text to subject textarea
+document.querySelectorAll('#gaze .chip').forEach(c => {
+  c.addEventListener('click', function() {
+    this.classList.toggle('on');
+    const ta = document.getElementById('subject');
+    const val = ta.value.trim();
+    const phrase = this.dataset.v;
+    if (this.classList.contains('on')) {
+      ta.value = val ? val.replace(/,\s*$/, '') + ', ' + phrase : phrase;
+    } else {
+      ta.value = ta.value.replace(new RegExp(',?\\s*' + phrase.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g'), '').replace(/^,\s*/,'').trim();
+    }
+    ta.dispatchEvent(new Event('input'));
+  });
+});
+
+// neg-chips — append to neg textarea
+document.querySelectorAll('.neg-chip').forEach(c => {
+  c.addEventListener('click', function() {
+    this.classList.toggle('on');
+    const ta = document.getElementById('neg');
+    const val = ta.value.trim();
+    const phrase = this.dataset.v;
+    if (this.classList.contains('on')) {
+      ta.value = val ? val.replace(/,\s*$/, '') + ', ' + phrase : phrase;
+    } else {
+      ta.value = ta.value.replace(new RegExp(',?\\s*' + phrase.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g'), '').replace(/^,\s*/,'').trim();
+    }
+  });
+});
+
+// live token estimate
+['subject','env','extra'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => {
+    const s = document.getElementById('subject').value.trim();
+    const e = document.getElementById('env').value.trim();
+    const x = document.getElementById('extra').value.trim();
+    const cam = getChips('cam').join(' ');
+    const lens = getChips('lens').join(' ');
+    const light = getChips('light').join(' ');
+    const style = getChips('style').join(' ');
+    const motion = getChips('motion').join(' ');
+    updateTokenBar([s,e,cam,lens,light,style,motion,x].filter(Boolean).join(' '));
+  });
+});
+</script>
+</body>
+</html>

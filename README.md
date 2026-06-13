@@ -27,6 +27,9 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 ### Image Processing
 - **UPSCALE REMOVE BACKGROUND AND MASK.json** - Upscaling workflow with automated background removal and masking
 
+### Prompt Builder
+- **ltxv-prompt-builder.html** - Build prompts for the LTXV workflow.
+
 ## Usage
 
 1. Download the desired workflow JSON file
