@@ -20,7 +20,8 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 - **I2I_flux2_klein_image_edit_4b_distilled-latest.json** - Image-to-image workflow using Flux 2 Klein with ControlNet integration
 
 ### Video Generation
-- **LTXV first last latest v1.json** - Image-to-video workflow using the LTXV distilled model with looping sampler first/last frame capabilities
+- **LTXV first last latest v1.json** - Image-to-video workflow using the LTXV distilled model, first/last frame capabilities
+- **LTXV latest.json** - Text-to-video workflow using the LTXV distilled model
 
 ### Image Processing
 - **UPSCALE REMOVE BACKGROUND AND MASK.json** - Upscaling workflow with automated background removal and masking
