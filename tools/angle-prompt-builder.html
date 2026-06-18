@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Multi-Angle Scene Prompt Builder</title>
+<style>
+  :root{
+    --bg:#10120f;
+    --panel:#181b16;
+    --panel-edge:#2b2f24;
+    --ink:#e7e6dd;
+    --ink-dim:#8c9080;
+    --accent:#c98a3f;   /* dusk amber, ties to the fishing-village example */
+    --accent-dim:#6b4d28;
+    --teal:#3f7a78;     /* matches the teal/amber grade from the prompts */
+    --mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    padding:24px;
+    line-height:1.5;
+  }
+  .wrap{max-width:980px;margin:0 auto;}
+
+  header{
+    border-bottom:1px solid var(--panel-edge);
+    padding-bottom:16px;
+    margin-bottom:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  header h1{
+    font-family:var(--mono);
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin:0;
+  }
+  header h1::before{ content:"▸ "; color:var(--ink-dim); }
+  header .tag{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--ink-dim);
+  }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--panel-edge);
+    border-radius:3px;
+    padding:18px;
+    margin-bottom:16px;
+  }
+  .panel-label{
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:10px;
+    display:flex;
+    justify-content:space-between;
+  }
+
+  textarea, select, input[type=text]{
+    width:100%;
+    background:#0d0f0b;
+    border:1px solid var(--panel-edge);
+    color:var(--ink);
+    font-family:var(--mono);
+    font-size:13px;
+    padding:10px 12px;
+    border-radius:2px;
+    resize:vertical;
+  }
+  textarea:focus, select:focus, input:focus{
+    outline:none;
+    border-color:var(--accent-dim);
+  }
+  textarea#baseScene{min-height:90px;}
+
+  .row{display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;}
+  .row > div{flex:1; min-width:160px;}
+  .field-label{
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--ink-dim);
+    margin-bottom:6px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+  }
+
+  .angle-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(150px,1fr));
+    gap:8px;
+    margin-top:10px;
+  }
+  .angle-chip{
+    font-family:var(--mono);
+    font-size:11.5px;
+    padding:8px 10px;
+    border:1px solid var(--panel-edge);
+    border-radius:2px;
+    background:#0d0f0b;
+    color:var(--ink-dim);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    transition:border-color .12s, color .12s;
+  }
+  .angle-chip:hover{border-color:var(--accent-dim);}
+  .angle-chip.active{
+    color:var(--ink);
+    border-color:var(--accent);
+    background:#1c1707;
+  }
+  .angle-chip input{accent-color:var(--accent); margin:0;}
+
+  .gen-btn{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    background:var(--accent);
+    color:#161108;
+    border:none;
+    padding:11px 22px;
+    border-radius:2px;
+    cursor:pointer;
+    font-weight:600;
+    margin-top:14px;
+  }
+  .gen-btn:hover{background:#dba159;}
+  .gen-btn:active{transform:translateY(1px);}
+
+  .out-card{
+    border:1px solid var(--panel-edge);
+    border-radius:3px;
+    margin-bottom:10px;
+    overflow:hidden;
+  }
+  .out-head{
+    background:#1c1f17;
+    padding:8px 12px;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--teal);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid var(--panel-edge);
+  }
+  .out-head .lens{color:var(--ink-dim);}
+  .copy-btn{
+    font-family:var(--mono);
+    font-size:10px;
+    background:none;
+    border:1px solid var(--panel-edge);
+    color:var(--ink-dim);
+    padding:3px 9px;
+    border-radius:2px;
+    cursor:pointer;
+  }
+  .copy-btn:hover{color:var(--accent); border-color:var(--accent-dim);}
+  .copy-btn.copied{color:var(--accent); border-color:var(--accent);}
+  .out-body{
+    padding:12px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--ink);
+    white-space:pre-wrap;
+    background:#0d0f0b;
+  }
+
+  .copy-all-row{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:10px;
+  }
+
+  .empty{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink-dim);
+    padding:20px 4px;
+    text-align:center;
+  }
+
+  .footnote{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--ink-dim);
+    margin-top:18px;
+    line-height:1.6;
+    border-top:1px solid var(--panel-edge);
+    padding-top:12px;
+  }
+  .footnote b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>angle prompt builder</h1>
+    <span class="tag">z-image turbo / flux2-klein-4b · fixed scene, swappable camera</span>
+  </header>
+
+  <div class="panel">
+    <div class="panel-label"><span>base scene (fixed block, reused in every angle)</span></div>
+    <textarea id="baseScene" placeholder="e.g. A weathered fishing village at dusk, narrow wooden docks extending into still water, moored boats with peeling paint, strings of warm lantern light, mist over the water, distant mountains, painterly detail, muted teal and amber grade"></textarea>
+
+    <div class="row">
+      <div>
+        <div class="field-label">target model</div>
+        <select id="model">
+          <option value="z-image">Z-Image Turbo (short, punchy terms)</option>
+          <option value="flux2-klein">Flux2-klein-4b (longer descriptive clauses)</option>
+        </select>
+      </div>
+      <div>
+        <div class="field-label">fixed seed (optional)</div>
+        <input type="text" id="seed" placeholder="e.g. 482917">
+      </div>
+      <div>
+        <div class="field-label">extra global tags (optional)</div>
+        <input type="text" id="globalTags" placeholder="e.g. 8k, no text, no watermark">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label"><span>angles to generate</span><span id="angleCount">5 selected</span></div>
+    <div class="angle-grid" id="angleGrid"></div>
+  </div>
+
+  <button class="gen-btn" id="genBtn">generate prompts</button>
+
+  <div class="panel" style="margin-top:18px;">
+    <div class="panel-label"><span>output</span></div>
+    <div class="copy-all-row">
+      <button class="copy-btn" id="copyAllBtn">copy all</button>
+    </div>
+    <div id="output"><div class="empty">no prompts yet — fill in the base scene and hit generate</div></div>
+  </div>
+
+  <div class="footnote">
+    <b>tip:</b> a fixed seed gets you thematic consistency across angles, not pixel-identical geometry — true multi-view consistency needs ControlNet/depth conditioning, which this builder doesn't do.<br>
+    <b>z-image turbo:</b> keep the base block under ~60 words; it favors short lens/angle terms over long clauses.<br>
+    <b>flux2-klein-4b:</b> handles longer descriptive blocks and compositional language (foreground/background, rule of thirds) more reliably.
+  </div>
+
+</div>
+
+<script>
+const ANGLES = [
+  { id:"wide",      label:"Wide establishing",   z:"wide angle shot, low camera height, deep perspective, 35mm look",
+                     fk:"wide angle shot, low camera height near the water line, docks leading into deep perspective, foreground boat slightly out of focus, 35mm lens look, expansive composition" },
+  { id:"eye",        label:"Eye-level",           z:"eye-level shot, shallow depth of field, 50mm look",
+                     fk:"eye-level shot from the walkway, shallow depth of field, soft bokeh in the background, subject framed center-left, 50mm lens look" },
+  { id:"overhead",   label:"High / drone",        z:"high angle drone shot, 45 degrees down, wide composition",
+                     fk:"high angle drone shot looking down at 45 degrees, showing the full scene from above, wide dynamic composition, environment context visible" },
+  { id:"low",        label:"Low dramatic",        z:"low angle shot, looking up, dramatic perspective",
+                     fk:"low angle shot looking up from near ground level, subject towering slightly in frame, dramatic upward perspective, sky or ceiling dominating the top third of frame" },
+  { id:"closeup",    label:"Close-up detail",     z:"close-up shot, shallow depth of field, 85mm macro look",
+                     fk:"close-up shot focused on one key detail of the scene, shallow depth of field, sharp foreground texture, background softly blurred, 85mm macro-style lens look" },
+  { id:"overshoulder",label:"Over-the-shoulder",  z:"over-the-shoulder shot, foreground silhouette, shallow focus",
+                     fk:"over-the-shoulder shot, a silhouetted foreground element framing the edge of the composition, shallow focus pulling attention to the middle distance" },
+  { id:"birdseye",   label:"Top-down / bird's-eye", z:"top-down bird's-eye shot, flat composition, graphic layout",
+                     fk:"top-down bird's-eye view, near-flat orthographic composition, layout read as a graphic pattern from directly above" },
+  { id:"dutch",      label:"Dutch tilt",          z:"dutch angle shot, tilted horizon, tense composition",
+                     fk:"dutch angle shot with a tilted horizon line, off-kilter framing that adds tension to the composition" },
+];
+
+const grid = document.getElementById("angleGrid");
+const defaultOn = new Set(["wide","eye","overhead","low","closeup"]);
+
+ANGLES.forEach(a=>{
+  const chip = document.createElement("label");
+  chip.className = "angle-chip" + (defaultOn.has(a.id) ? " active" : "");
+  chip.innerHTML = `<input type="checkbox" value="${a.id}" ${defaultOn.has(a.id)?"checked":""}> ${a.label}`;
+  chip.querySelector("input").addEventListener("change", e=>{
+    chip.classList.toggle("active", e.target.checked);
+    updateCount();
+  });
+  grid.appendChild(chip);
+});
+
+function updateCount(){
+  const n = document.querySelectorAll('.angle-chip input:checked').length;
+  document.getElementById("angleCount").textContent = `${n} selected`;
+}
+updateCount();
+
+function buildPrompts(){
+  const base = document.getElementById("baseScene").value.trim();
+  const model = document.getElementById("model").value;
+  const seed = document.getElementById("seed").value.trim();
+  const globalTags = document.getElementById("globalTags").value.trim();
+  const checked = Array.from(document.querySelectorAll('.angle-chip input:checked')).map(c=>c.value);
+
+  const out = document.getElementById("output");
+  out.innerHTML = "";
+
+  if(!base){
+    out.innerHTML = '<div class="empty">add a base scene description first</div>';
+    return [];
+  }
+  if(checked.length === 0){
+    out.innerHTML = '<div class="empty">select at least one angle</div>';
+    return [];
+  }
+
+  const results = [];
+
+  checked.forEach(id=>{
+    const angle = ANGLES.find(a=>a.id===id);
+    const clause = model === "z-image" ? angle.z : angle.fk;
+    let prompt = `${base}, ${clause}`;
+    if(globalTags) prompt += `, ${globalTags}`;
+
+    let meta = `lens/angle: ${angle.label}`;
+    if(seed) meta += `  ·  seed: ${seed}`;
+
+    results.push({label: angle.label, prompt, meta});
+
+    const card = document.createElement("div");
+    card.className = "out-card";
+    card.innerHTML = `
+      <div class="out-head">
+        <span>${angle.label}</span>
+        <span class="lens">${meta.replace(`lens/angle: ${angle.label}`,"").replace(/^\s*·\s*/,"")}</span>
+      </div>
+      <div class="out-body"></div>
+    `;
+    card.querySelector(".out-body").textContent = prompt;
+
+    const headRow = card.querySelector(".out-head");
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "copy-btn";
+    copyBtn.textContent = "copy";
+    copyBtn.addEventListener("click", ()=>{
+      navigator.clipboard.writeText(prompt).then(()=>{
+        copyBtn.textContent = "copied";
+        copyBtn.classList.add("copied");
+        setTimeout(()=>{copyBtn.textContent="copy"; copyBtn.classList.remove("copied");}, 1400);
+      });
+    });
+    headRow.appendChild(copyBtn);
+
+    out.appendChild(card);
+  });
+
+  return results;
+}
+
+let lastResults = [];
+
+document.getElementById("genBtn").addEventListener("click", ()=>{
+  lastResults = buildPrompts();
+});
+
+document.getElementById("copyAllBtn").addEventListener("click", ()=>{
+  if(lastResults.length === 0){
+    lastResults = buildPrompts();
+  }
+  if(lastResults.length === 0) return;
+  const text = lastResults.map(r => `# ${r.label}\n${r.prompt}`).join("\n\n");
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.getElementById("copyAllBtn");
+    btn.textContent = "copied all";
+    btn.classList.add("copied");
+    setTimeout(()=>{btn.textContent="copy all"; btn.classList.remove("copied");}, 1400);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Perspective Selector</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #252540;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #4dd0e1;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .selector {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #4dd0e1;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #perspective-display {
+            border: 2px dashed #ffb74d;
+            padding: 20px;
+            min-height: 150px;
+            border-radius: 8px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        #perspective-display p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Camera Angle Selector</h1>
+
+        <div class="selector">
+            <label for="perspective-select">Select Perspective:</label>
+            <select id="perspective-select">
+                <option value="wide">Wide Shot</option>
+                <option value="close">Close-Up</option>
+                <option value="low_angle">Low Angle (Worm's Eye)</option>
+                <option value="high_angle">High Angle</option>
+                <option value="profile">Profile Shot</option>
+                <option value="dutch">Dutch Angle (Canted)</option>
+            </select>
+        </div>
+
+        <div id="perspective-display">
+            <p>Select a perspective above to see the description here.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectElement = document.getElementById('perspective-select');
+            const displayElement = document.getElementById('perspective-display');
+
+            // Define the mapping of values to descriptions
+            const perspectives = {
+                wide: {
+                    title: "Wide Shot",
+                    description: "Good for establishing shots. Shows the subject and their environment in context."
+                },
+                close: {
+                    title: "Close-Up",
+                    description: "Focuses tightly on the subject's face or a specific detail. Great for emotional impact."
+                },
+                low_angle: {
+                    title: "Low Angle",
+                    description: "Makes the subject look powerful, dominant, or imposing."
+                },
+                high_angle: {
+                    title: "High Angle",
+                    description: "Makes the subject look small, vulnerable, or subordinate."
+                },
+                profile: {
+                    title: "Profile Shot",
+                    description: "Shows the subject from the side, emphasizing shape and silhouette."
+                },
+                dutch: {
+                    title: "Dutch Angle (Canted)",
+                    description: "Tilts the horizon to create a sense of tension, unease, or disorientation."
+                }
+            };
+
+            // Function to handle the selection change
+            function updateDisplay() {
+                const selectedValue = selectElement.value;
+                const selected = perspectives[selectedValue];
+
+                if (selected) {
+                    displayElement.innerHTML = `
+                        <p><strong>Selected: ${selected.title}</strong></p>
+                        <p>${selected.description}</p>
+                    `;
+                    displayElement.style.backgroundColor = '#3a3a5a';
+                } else {
+                    displayElement.innerHTML = '<p>Select a perspective above to see the description here.</p>';
+                    displayElement.style.backgroundColor = '#252540';
+                }
+            }
+
+            // Attach the function to the change event
+            selectElement.addEventListener('change', updateDisplay);
+
+            // Initial load setup
+            updateDisplay();
+        });
+    </script>
+
+</body>
+</html>

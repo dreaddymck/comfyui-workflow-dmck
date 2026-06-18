@@ -26,8 +26,11 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 ### Image Processing
 - **UPSCALE REMOVE BACKGROUND AND MASK.json** - Upscaling workflow with automated background removal and masking
 
-### Prompt Builder
-- **ltxv-prompt-builder.html** - Build prompts for the LTXV workflow.
+### Misc Tools
+- **angle-prompt-builder.html** - Build prompts for flux/zit.
+- **ace-step-prompt-generator.html** - Build prompts for Ace Step 1.5.
+- **infograph-studio.html** - Build text prompts for inforgraphs.
+- **ltxv-prompt-builder.html** - Build prompts for LTXV workflow.
 
 ## Usage
 

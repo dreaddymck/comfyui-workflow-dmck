@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD/HTML Converter</title>
+    <!-- Include marked.js for Markdown parsing -->
+    <script src="js/marked.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            flex-grow: 1;
+        }
+        .panel {
+            flex: 1;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output-box {
+            background-color: #e9ecef;
+            min-height: 300px;
+            white-space: pre-wrap; /* Important for displaying raw HTML */
+            overflow: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Markdown & HTML Bidirectional Converter</h1>
+
+    <div class="container">
+        <div class="panel">
+            <h2>Markdown Input</h2>
+            <textarea id="markdownInput" placeholder="Paste your Markdown here..."></textarea>
+            <button onclick="convertMarkdownToHtml()">Convert MD to HTML</button>
+        </div>
+
+        <div class="panel">
+            <h2>HTML Input</h2>
+            <textarea id="htmlInput" placeholder="Paste your HTML here..."></textarea>
+            <button onclick="convertHtmlToMarkdown()">Convert HTML to MD</button>
+        </div>
+    </div>
+
+    <h2>Output</h2>
+    <div class="panel">
+        <h3>HTML Output:</h3>
+        <div id="htmlOutput" class="output-box"></div>
+    </div>
+    <div class="panel">
+        <h3>Markdown Output:</h3>
+        <div id="markdownOutput" class="output-box"></div>
+    </div>
+
+    <script>
+        const mdInput = document.getElementById('markdownInput');
+        const htmlInput = document.getElementById('htmlInput');
+        const htmlOutput = document.getElementById('htmlOutput');
+        const markdownOutput = document.getElementById('markdownOutput');
+
+        /**
+         * Function 1: Markdown to HTML
+         */
+        function convertMarkdownToHtml() {
+            const markdownText = mdInput.value;
+            if (!markdownText) {
+                alert("Please enter Markdown text.");
+                return;
+            }
+
+            // Use marked.js to convert Markdown to HTML
+            const htmlResult = marked.parse(markdownText);
+
+            htmlOutput.textContent = htmlResult;
+            markdownOutput.textContent = "Conversion successful. Check HTML Output.";
+        }
+
+        /**
+         * Function 2: HTML to Markdown (The complex part)
+         */
+        function convertHtmlToMarkdown() {
+            const htmlText = htmlInput.value;
+            if (!htmlText) {
+                alert("Please enter HTML text.");
+                return;
+            }
+
+            // --- CRITICAL NOTE ---
+            // Converting HTML back to clean Markdown is extremely complex.
+            // A perfect converter requires a full DOM parser to correctly handle
+            // nested elements, attributes, and edge cases.
+            // For this simple implementation, we use a very basic substitution.
+
+            let markdownResult = "--- HTML to Markdown Conversion Attempted ---\n\n";
+
+            // Simple (and fragile) replacements:
+            markdownResult += htmlText.replace(/<h1>(.*?)<\/h1>/g, '# $1\n\n');
+            markdownResult += htmlText.replace(/<h2>(.*?)<\/h2>/g, '## $1\n\n');
+            markdownResult += htmlText.replace(/<p>(.*?)<\/p>/gs, '* $1\n');
+            markdownResult += htmlText.replace(/<strong>(.*?)<\/strong>/g, '**$1**');
+
+            markdownOutput.textContent = markdownResult;
+        }
+
+        // Initialize with some example text for testing
+        mdInput.value = "# Welcome to the App\n\nThis is **bold** text.\n\n- Item 1\n- Item 2";
+        htmlInput.value = "<h1>Main Title</h1>\n<p>This is a paragraph.</p>\n<p><strong>This is important.</strong></p>";
+
+    </script>
+</body>
+</html>

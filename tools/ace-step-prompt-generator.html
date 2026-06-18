@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACE-Step Prompt Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0e0d0b;
+    --bg2:       #161410;
+    --bg3:       #1e1b16;
+    --bg4:       #252118;
+    --border:    #2e2a20;
+    --amber:     #e8a020;
+    --amber-dim: #7a5210;
+    --amber-glow:#e8a02022;
+    --green:     #4caf78;
+    --red:       #c0392b;
+    --text:      #e8e0cc;
+    --text-dim:  #7a7060;
+    --text-mid:  #b0a080;
+    --mono:      'Space Mono', monospace;
+    --sans:      'Syne', sans-serif;
+    --radius:    4px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    min-height: 100vh;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.012) 2px,
+        rgba(255,255,255,0.012) 4px
+      );
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--amber);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    box-shadow: 0 0 16px var(--amber-dim);
+  }
+  .logo-icon::before {
+    content: '';
+    width: 10px; height: 10px;
+    background: var(--bg);
+    border-radius: 50%;
+  }
+  .logo-icon::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0,0,0,0.4);
+  }
+
+  .logo-text {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--amber);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .logo-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* ── Layout ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 0;
+    min-height: calc(100vh - 60px);
+  }
+
+  .main-panel {
+    padding: 2rem;
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+  }
+
+  .side-panel {
+    position: sticky;
+    top: 60px;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+    padding: 1.5rem;
+    background: var(--bg2);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* ── Section cards ── */
+  .section {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+
+  .section-head {
+    padding: 10px 14px;
+    background: var(--bg4);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-mid);
+  }
+
+  .section-head .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 6px var(--amber);
+  }
+
+  .section-body { padding: 14px; }
+
+  /* ── Form elements ── */
+  .row { display: flex; gap: 12px; margin-bottom: 10px; }
+  .row:last-child { margin-bottom: 0; }
+  .field { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+
+  label {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select,
+  textarea {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 7px 10px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--amber-dim);
+    box-shadow: 0 0 0 2px var(--amber-glow);
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a7060'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+    cursor: pointer;
+  }
+
+  select option { background: var(--bg2); }
+
+  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+  input::placeholder, textarea::placeholder { color: var(--text-dim); }
+
+  /* ── Tag pills ── */
+  .tag-group { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .tag {
+    padding: 4px 10px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-family: var(--mono);
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-dim);
+    transition: all 0.12s;
+    user-select: none;
+    letter-spacing: 0.02em;
+  }
+
+  .tag:hover { border-color: var(--amber-dim); color: var(--text-mid); }
+
+  .tag.on {
+    background: var(--amber-glow);
+    border-color: var(--amber-dim);
+    color: var(--amber);
+    box-shadow: 0 0 8px var(--amber-glow);
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    padding: 10px 20px;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--amber);
+    color: var(--bg);
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #f0b030; box-shadow: 0 0 20px var(--amber-dim); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--text-dim); color: var(--text); }
+
+  .btn-copy {
+    background: var(--bg4);
+    color: var(--text-mid);
+    border: 1px solid var(--border);
+    padding: 7px 14px;
+    font-size: 11px;
+  }
+  .btn-copy:hover { border-color: var(--amber-dim); color: var(--amber); }
+  .btn-copy.copied { color: var(--green); border-color: var(--green); }
+
+  /* ── Output area ── */
+  .output-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.8;
+    color: var(--text-mid);
+    padding: 12px 14px;
+    min-height: 70px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    position: relative;
+  }
+
+  .output-box.empty {
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  .output-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* ── VU meter decoration ── */
+  .vu-bar {
+    display: flex;
+    gap: 2px;
+    align-items: flex-end;
+    height: 20px;
+  }
+
+  .vu-seg {
+    width: 4px;
+    border-radius: 1px;
+    background: var(--border);
+    transition: background 0.3s, height 0.3s;
+  }
+
+  /* ── Tag count badge ── */
+  .count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--amber-glow);
+    border: 1px solid var(--amber-dim);
+    color: var(--amber);
+    font-family: var(--mono);
+    font-size: 9px;
+    border-radius: 2px;
+    padding: 1px 5px;
+    margin-left: 6px;
+    min-width: 18px;
+  }
+
+  /* ── Divider ── */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1rem 0;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--amber-dim); }
+
+  /* ── Animations ── */
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--amber); }
+    50% { opacity: 0.5; box-shadow: 0 0 2px var(--amber); }
+  }
+  .live-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .slide-up { animation: slide-up 0.25s ease; }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .side-panel { position: static; height: auto; border-top: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon live-dot"></div>
+    <div>
+      <div class="logo-text">ACE-Step</div>
+      <div class="logo-sub">Prompt Generator</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-ghost" onclick="clearAll()">Clear All</button>
+    <button class="btn btn-primary" onclick="generate()">⚡ Generate</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ══ MAIN PANEL ══ -->
+  <div class="main-panel">
+
+    <!-- Track Identity -->
+    <div class="section">
+      <div class="section-head"><span class="dot"></span> Track Identity</div>
+      <div class="section-body">
+        <div class="row">
+          <div class="field" style="flex:2">
+            <label>Working Title</label>
+            <input type="text" id="title" placeholder="e.g. Sunbeam on the Brick">
+          </div>
+          <div class="field">
+            <label>BPM</label>
+            <input type="number" id="bpm" placeholder="108" min="40" max="300">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Primary Genre</label>
+            <select id="genre">
+              <option value="">— none —</option>
+              <option>Reggae</option>
+              <option>Hip-Hop / Boom Bap</option>
+              <option>Lofi Hip-Hop</option>
+              <option>Chillhop</option>
+              <option>R&amp;B / Soul</option>
+              <option>Afrobeats</option>
+              <option>Dancehall</option>
+              <option>Rock</option>
+              <option>Indie Folk</option>
+              <option>Electronic / House</option>
+              <option>Jazz</option>
+              <option>Classical / Orchestral</option>
+              <option>Metal</option>
+              <option>Country</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Fusion / Sub-genre</label>
+            <input type="text" id="fusion" placeholder="e.g. Acoustic Rock">
+          </div>
+          <div class="field">
+            <label>Key</label>
+            <select id="key">
+              <option value="">— none —</option>
+              <option>C major</option><option>C minor</option>
+              <option>D major</option><option>D minor</option>
+              <option>E major</option><option>E minor</option>
+              <option>F major</option><option>F minor</option>
+              <option>G major</option><option>G minor</option>
+              <option>A major</option><option>A minor</option>
+              <option>B major</option><option>B minor</option>
+              <option>F# minor</option><option>Bb major</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Reference Artists</label>
+            <input type="text" id="refs" placeholder="e.g. The Roots meets Kings of Leon">
+          </div>
+          <div class="field">
+            <label>Thematic Focus</label>
+            <input type="text" id="theme" placeholder="e.g. resilience, community">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mood -->
+    <div class="section">
+      <div class="section-head">
+        <span class="dot"></span> Mood &amp; Atmosphere
+        <span class="count-badge" id="mood-count">0</span>
+      </div>
+      <div class="section-body">
+        <div class="tag-group" id="mood-tags"></div>
+      </div>
+    </div>
+
+    <!-- Instrumentation -->
+    <div class="section">
+      <div class="section-head">
+        <span class="dot"></span> Instrumentation
+        <span class="count-badge" id="inst-count">0</span>
+      </div>
+      <div class="section-body">
+        <div class="tag-group" id="inst-tags"></div>
+        <div style="margin-top:10px">
+          <label>Extra Notes</label>
+          <input type="text" id="inst-extra" style="margin-top:5px" placeholder="e.g. syncopated hi-hat locking with bass, deep resonant kick">
+        </div>
+      </div>
+    </div>
+
+    <!-- Vocals -->
+    <div class="section">
+      <div class="section-head">
+        <span class="dot"></span> Vocals
+        <span class="count-badge" id="vocal-count">0</span>
+      </div>
+      <div class="section-body">
+        <div class="tag-group" id="vocal-tags"></div>
+        <div style="margin-top:10px">
+          <label>Vocal Character</label>
+          <input type="text" id="vocal-char" style="margin-top:5px" placeholder="e.g. warm belt, slight reverb, Caribbean inflection">
+        </div>
+      </div>
+    </div>
+
+    <!-- Production -->
+    <div class="section">
+      <div class="section-head">
+        <span class="dot"></span> Production Style
+        <span class="count-badge" id="prod-count">0</span>
+      </div>
+      <div class="section-body">
+        <div class="tag-group" id="prod-tags"></div>
+      </div>
+    </div>
+
+    <!-- Lyrics -->
+    <div class="section">
+      <div class="section-head"><span class="dot"></span> Lyrics</div>
+      <div class="section-body">
+        <label>Paste or write lyrics — output goes to ACE-Step's separate lyrics input</label>
+        <textarea id="lyrics" style="margin-top:6px" placeholder="[verse]&#10;The concrete is cold, the wind is strong...&#10;&#10;[chorus]&#10;Oh, we stand together..."></textarea>
+      </div>
+    </div>
+
+    <!-- Generate (mobile bottom) -->
+    <div style="display:flex; gap:10px; padding-top:4px">
+      <button class="btn btn-primary" style="flex:1" onclick="generate()">⚡ Generate Prompt</button>
+      <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+    </div>
+
+  </div>
+
+  <!-- ══ SIDE PANEL ══ -->
+  <div class="side-panel">
+
+    <!-- VU meter -->
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px">
+      <span style="font-family:var(--mono); font-size:10px; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase">Signal</span>
+      <div class="vu-bar" id="vu-bar"></div>
+    </div>
+
+    <!-- Prompt output -->
+    <div>
+      <div class="output-label">
+        <span>Prompt Field</span>
+        <button class="btn btn-copy" id="copy-prompt-btn" onclick="copyText('out-prompt','copy-prompt-btn')">Copy</button>
+      </div>
+      <div class="output-box empty" id="out-prompt">Hit Generate to build your prompt.</div>
+    </div>
+
+    <hr>
+
+    <!-- Lyrics output -->
+    <div>
+      <div class="output-label">
+        <span>Lyrics Field</span>
+        <button class="btn btn-copy" id="copy-lyrics-btn" onclick="copyText('out-lyrics','copy-lyrics-btn')">Copy</button>
+      </div>
+      <div class="output-box empty" id="out-lyrics">No lyrics entered.</div>
+    </div>
+
+    <hr>
+
+    <!-- Tag summary -->
+    <div>
+      <div class="output-label"><span>Active Tags</span><span id="total-count" style="font-family:var(--mono);font-size:10px;color:var(--text-dim)">0</span></div>
+      <div id="tag-summary" style="font-family:var(--mono);font-size:10px;color:var(--text-dim);line-height:1.9">
+        No tags selected.
+      </div>
+    </div>
+
+    <div style="margin-top:auto; padding-top:1rem; border-top: 1px solid var(--border)">
+      <p style="font-family:var(--mono);font-size:9px;color:var(--text-dim);line-height:1.7;letter-spacing:0.04em">
+        PROMPT FIELD → ACE-Step tags / prompt input<br>
+        LYRICS FIELD → ACE-Step separate lyrics input<br>
+        <br>
+        No server. No dependencies. Works offline.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+
+const MOODS = [
+  "uplifting","melancholic","aggressive","chill / relaxed","anthemic",
+  "intimate / introspective","euphoric","dark / ominous","hopeful",
+  "nostalgic","tense / suspenseful","dreamy","soulful","gritty",
+  "spiritual / meditative","communal / social"
+];
+
+const INSTRUMENTS = [
+  "acoustic guitar","electric guitar","bass guitar","fingerpicked guitar",
+  "piano","keys / Rhodes","organ","synth pads","808 bass","live drums",
+  "drum machine","hi-hat patterns","strings / orchestra","brass / horns",
+  "vinyl crackle","percussion","flute","saxophone"
+];
+
+const VOCALS = [
+  "male vocals","female vocals","harmonies","choir",
+  "rap / flow","instrumental only","spoken word","sung hooks only"
+];
+
+const PRODUCTION = [
+  "clean mix","lo-fi / warm","heavy compression","wide stereo",
+  "subtle reverb","dry / close-mic","punchy drums",
+  "layered textures","organic / live feel","sample-based"
+];
+
+// ── Build tag groups ──────────────────────────────────────────────────────────
+
+function buildTags(containerId, items, countId) {
+  const container = document.getElementById(containerId);
+  items.forEach(item => {
+    const el = document.createElement('span');
+    el.className = 'tag';
+    el.textContent = item;
+    el.dataset.val = item;
+    el.addEventListener('click', () => {
+      el.classList.toggle('on');
+      updateCount(containerId, countId);
+      updateVU();
+      updateSummary();
+    });
+    container.appendChild(el);
+  });
+}
+
+function updateCount(containerId, countId) {
+  const n = document.querySelectorAll(`#${containerId} .tag.on`).length;
+  document.getElementById(countId).textContent = n;
+}
+
+function getActive(containerId) {
+  return [...document.querySelectorAll(`#${containerId} .tag.on`)].map(t => t.dataset.val);
+}
+
+// ── VU meter ──────────────────────────────────────────────────────────────────
+
+const VU_SEGS = 12;
+const vuBar = document.getElementById('vu-bar');
+for (let i = 0; i < VU_SEGS; i++) {
+  const seg = document.createElement('div');
+  seg.className = 'vu-seg';
+  seg.style.height = `${6 + i * 1.2}px`;
+  vuBar.appendChild(seg);
+}
+
+function updateVU() {
+  const total = countAllTags();
+  const max = MOODS.length + INSTRUMENTS.length + VOCALS.length + PRODUCTION.length;
+  const fill = Math.round((total / max) * VU_SEGS);
+  [...vuBar.children].forEach((seg, i) => {
+    if (i < fill) {
+      const pct = i / VU_SEGS;
+      seg.style.background = pct < 0.6 ? 'var(--green)' : pct < 0.85 ? 'var(--amber)' : 'var(--red)';
+    } else {
+      seg.style.background = 'var(--border)';
+    }
+  });
+}
+
+function countAllTags() {
+  return document.querySelectorAll('.tag.on').length;
+}
+
+// ── Tag summary ───────────────────────────────────────────────────────────────
+
+function updateSummary() {
+  const all = [...document.querySelectorAll('.tag.on')].map(t => t.dataset.val);
+  const el = document.getElementById('tag-summary');
+  const count = document.getElementById('total-count');
+  count.textContent = all.length;
+  if (!all.length) {
+    el.textContent = 'No tags selected.';
+    return;
+  }
+  el.innerHTML = all.map(v =>
+    `<span style="color:var(--amber-dim);margin-right:4px">▸</span>${v}<br>`
+  ).join('');
+}
+
+// ── Generate ──────────────────────────────────────────────────────────────────
+
+function generate() {
+  const parts = [];
+
+  const genre  = document.getElementById('genre').value.trim();
+  const fusion = document.getElementById('fusion').value.trim();
+  const bpm    = document.getElementById('bpm').value.trim();
+  const key    = document.getElementById('key').value.trim();
+  const refs   = document.getElementById('refs').value.trim();
+  const theme  = document.getElementById('theme').value.trim();
+  const instEx = document.getElementById('inst-extra').value.trim();
+  const vocalC = document.getElementById('vocal-char').value.trim();
+  const lyrics = document.getElementById('lyrics').value.trim();
+
+  if (genre) parts.push(fusion ? `${genre} ${fusion} fusion` : genre);
+  else if (fusion) parts.push(fusion);
+
+  parts.push(...getActive('mood-tags'));
+  parts.push(...getActive('inst-tags'));
+  if (instEx) parts.push(instEx);
+  parts.push(...getActive('vocal-tags'));
+  if (vocalC) parts.push(vocalC);
+  parts.push(...getActive('prod-tags'));
+  if (bpm) parts.push(`${bpm} BPM`);
+  if (key) parts.push(key);
+  if (refs) parts.push(refs);
+  if (theme) parts.push(`themes of ${theme}`);
+
+  const prompt = parts.join(', ');
+
+  // Update prompt output
+  const outPrompt = document.getElementById('out-prompt');
+  outPrompt.classList.remove('empty', 'slide-up');
+  void outPrompt.offsetWidth; // force reflow for animation restart
+  outPrompt.classList.add('slide-up');
+
+  if (prompt) {
+    outPrompt.classList.remove('empty');
+    outPrompt.textContent = prompt;
+  } else {
+    outPrompt.classList.add('empty');
+    outPrompt.textContent = 'Add some inputs first.';
+  }
+
+  // Update lyrics output
+  const outLyrics = document.getElementById('out-lyrics');
+  outLyrics.classList.remove('empty', 'slide-up');
+  void outLyrics.offsetWidth;
+  outLyrics.classList.add('slide-up');
+
+  if (lyrics) {
+    outLyrics.classList.remove('empty');
+    outLyrics.textContent = lyrics;
+  } else {
+    outLyrics.classList.add('empty');
+    outLyrics.textContent = 'No lyrics entered.';
+  }
+}
+
+// ── Copy ──────────────────────────────────────────────────────────────────────
+
+function copyText(outputId, btnId) {
+  const text = document.getElementById(outputId).textContent.trim();
+  const btn  = document.getElementById(btnId);
+  const empty = ['Hit Generate to build your prompt.', 'No lyrics entered.', 'Add some inputs first.'];
+  if (!text || empty.includes(text)) return;
+
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// ── Clear ─────────────────────────────────────────────────────────────────────
+
+function clearAll() {
+  ['title','bpm','fusion','refs','theme','inst-extra','vocal-char'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('genre').value = '';
+  document.getElementById('key').value = '';
+  document.getElementById('lyrics').value = '';
+  document.querySelectorAll('.tag.on').forEach(t => t.classList.remove('on'));
+  ['mood-count','inst-count','vocal-count','prod-count'].forEach(id => {
+    document.getElementById(id).textContent = '0';
+  });
+  document.getElementById('out-prompt').textContent = 'Hit Generate to build your prompt.';
+  document.getElementById('out-prompt').classList.add('empty');
+  document.getElementById('out-lyrics').textContent = 'No lyrics entered.';
+  document.getElementById('out-lyrics').classList.add('empty');
+  updateVU();
+  updateSummary();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+
+buildTags('mood-tags',  MOODS,       'mood-count');
+buildTags('inst-tags',  INSTRUMENTS, 'inst-count');
+buildTags('vocal-tags', VOCALS,      'vocal-count');
+buildTags('prod-tags',  PRODUCTION,  'prod-count');
+updateVU();
+
+// Live generate on input changes
+document.querySelectorAll('input, select, textarea').forEach(el => {
+  el.addEventListener('input', generate);
+  el.addEventListener('change', generate);
+});
+</script>
+</body>
+</html>

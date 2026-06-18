@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Creative Pipeline — Index</title>
+  <style>
+    :root {
+      --bg: #10120f;
+      --panel: #181b16;
+      --panel-edge: #2b2f24;
+      --ink: #e7e6dd;
+      --ink-dim: #8c9080;
+      --accent: #c98a3f;
+      --accent-dim: #6b4d28;
+      --teal: #3f7a78;
+      --violet: #8d7bb0;
+      --mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--panel-edge);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0;
+    }
+
+    header h1::before {
+      content: "▸ ";
+      color: var(--ink-dim);
+    }
+
+    header .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-dim);
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      margin: 28px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--panel-edge);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--panel-edge);
+      border-radius: 3px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--ink);
+      transition: border-color .12s, transform .08s;
+      position: relative;
+    }
+
+    .card:hover {
+      border-color: var(--accent-dim);
+    }
+
+    .card:active {
+      transform: translateY(1px);
+    }
+
+    .card.disabled {
+      cursor: default;
+      opacity: 0.55;
+    }
+
+    .card.disabled:hover {
+      border-color: var(--panel-edge);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .card-name {
+      font-family: var(--mono);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .status {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 2px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .status.ready {
+      color: var(--teal);
+      border: 1px solid var(--teal);
+    }
+
+    .status.pending {
+      color: var(--ink-dim);
+      border: 1px solid var(--panel-edge);
+    }
+
+    .card-desc {
+      font-size: 12.5px;
+      color: var(--ink-dim);
+      line-height: 1.5;
+    }
+
+    .card-path {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--accent-dim);
+      border-top: 1px solid var(--panel-edge);
+      padding-top: 8px;
+      margin-top: auto;
+      word-break: break-all;
+    }
+
+    .card.disabled .card-path {
+      color: var(--ink-dim);
+    }
+
+    .stack-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .stack-tag {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      color: var(--violet);
+      background: #1b1722;
+      border: 1px solid #312a3d;
+      padding: 2px 7px;
+      border-radius: 2px;
+    }
+
+    .footnote {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--ink-dim);
+      margin-top: 32px;
+      line-height: 1.7;
+      border-top: 1px solid var(--panel-edge);
+      padding-top: 14px;
+    }
+
+    .footnote b {
+      color: var(--ink);
+    }
+
+    .footnote code {
+      background: #0d0f0b;
+      padding: 1px 5px;
+      border-radius: 2px;
+      color: var(--accent);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header>
+      <h1>creative pipeline</h1>
+      <span class="tag">local-first generation tools · launcher</span>
+    </header>
+
+    <div class="section-label">image</div>
+    <div class="grid">
+
+      <a class="card" href="angle-prompt-builder.html">
+        <div class="card-top">
+          <span class="card-name">Angle Prompt Builder</span>
+          <span class="status ready">ready</span>
+        </div>
+        <div class="card-desc">Fixes a base scene description and swaps the camera/angle clause across 8 angle presets
+          (wide, eye-level, drone, low, close-up, OTS, bird's-eye, dutch tilt).</div>
+        <div class="stack-row">
+          <span class="stack-tag">z-image turbo</span>
+          <span class="stack-tag">flux2-klein-4b</span>
+        </div>
+        <div class="card-path">angle-prompt-builder.html</div>
+      </a>
+
+      <a class="card" href="infograph-studio.html">
+        <div class="card-top">
+          <span class="card-name">Infograph Studio</span>
+          <span class="status ready">ready</span>
+        </div>
+        <div class="card-desc">SVG infographic generator with Anthropic / Ollama / OpenAI provider support.</div>
+        <div class="stack-row">
+          <span class="stack-tag">multi-provider</span>
+          <span class="stack-tag">svg</span>
+        </div>
+        <div class="card-path">infograph-studio.html</div>
+      </a>
+
+      <a class="card" href="camera-angle-selector.html">
+        <div class="card-top">
+          <span class="card-name">Camera Angle Selector</span>
+          <span class="status ready">ready</span>
+        </div>
+        <div class="card-desc">Camera angles and description</div>
+        <div class="stack-row">
+          <span class="stack-tag">angles</span>
+          <span class="stack-tag">comfyui node</span>
+        </div>
+        <div class="card-path">camera-angle-selector.html</div>
+      </a>
+
+    </div>
+
+    <div class="section-label">video</div>
+    <div class="grid">
+
+      <a class="card" href="ltxv-prompt-builder.html">
+        <div class="card-top">
+          <span class="card-name">LTXV Prompt Builder</span>
+          <span class="status ready">ready</span>
+        </div>
+        <div class="card-desc">Structured prompt builder for LTXV 2B video generation.</div>
+        <div class="stack-row">
+          <span class="stack-tag">ltxv 2b</span>
+        </div>
+        <div class="card-path">ltxv-prompt-builder.html</div>
+      </a>
+
+    </div>
+
+    <div class="section-label">audio</div>
+    <div class="grid">
+
+      <a class="card" href="ace-step-prompt-generator.html">
+        <div class="card-top">
+          <span class="card-name">ACE-Step Prompt Generator</span>
+          <span class="status ready">ready</span>
+        </div>
+        <div class="card-desc">Song/lyric and style-tag prompt generator for ACE-Step, with a Python/tkinter and ComfyUI
+          custom-node variant.</div>
+        <div class="stack-row">
+          <span class="stack-tag">ace-step</span>
+          <span class="stack-tag">comfyui node</span>
+        </div>
+        <div class="card-path">ace-step-prompt-generator.html</div>
+      </a>
+
+    </div>
+
+    <div class="section-label">Text</div>
+    <div class="grid">
+
+      <a class="card" href="markdown-to-html.html">
+        <div class="card-top">
+          <span class="card-name">markdown-to-html</span>
+          <span class="status ready">ready</span>
+        </div>
+        <div class="card-desc">Convert markdown to html and vice versa.</div>
+        <div class="stack-row">
+          <span class="stack-tag">html</span>
+          <span class="stack-tag">tools</span>
+        </div>
+        <div class="card-path">markdown-to-html.html</div>
+      </a>
+
+    </div>
+
+    <div class="footnote">
+      <b>wiring up the pending tools:</b> drop each tool's HTML file in the same folder as this index using the filename
+      shown on its card, then it's just a normal link — open this file and click through.<br>
+      <b>different filename or folder?</b> open this file in a text editor, find the matching <code>href="..."</code>
+      and <code>onclick="return false;"</code> pair, update the path, and delete the
+      <code>onclick="return false;"</code> attribute to make the card clickable.<br>
+      <b>note:</b> this index uses relative paths, so it (and every linked app) should live in one folder for the links
+      to resolve.
+    </div>
+
+  </div>
+</body>
+
+</html>

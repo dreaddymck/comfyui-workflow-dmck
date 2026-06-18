@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infograph Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0e0e11;
+  --bg2: #16161b;
+  --bg3: #1e1e26;
+  --border: #2a2a35;
+  --border2: #3a3a4a;
+  --accent: #7c6af7;
+  --accent2: #a594f9;
+  --accent-dim: rgba(124,106,247,0.12);
+  --accent-glow: rgba(124,106,247,0.25);
+  --text: #e8e6f0;
+  --text2: #9896a8;
+  --text3: #5c5a6a;
+  --success: #3dd68c;
+  --success-bg: rgba(61,214,140,0.1);
+  --warn: #f5a623;
+  --warn-bg: rgba(245,166,35,0.1);
+  --danger: #f06b6b;
+  --danger-bg: rgba(240,107,107,0.1);
+  --info: #60b4f7;
+  --mono: 'DM Mono', monospace;
+  --sans: 'Syne', sans-serif;
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+/* ── Header ─────────────────────────────── */
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -0.5px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-mark {
+  width: 26px; height: 26px;
+  background: var(--accent);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+}
+
+.logo-mark svg { display: block; }
+
+.header-tag {
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Layout ──────────────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  height: calc(100vh - 54px);
+  overflow: hidden;
+}
+
+/* ── Sidebar ─────────────────────────────── */
+.sidebar {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.section {
+  border-bottom: 1px solid var(--border);
+  padding: 16px 18px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.section-head svg { color: var(--accent); flex-shrink: 0; }
+
+.section-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text2);
+  flex: 1;
+}
+
+.chevron {
+  color: var(--text3);
+  transition: transform 0.2s;
+}
+.chevron.open { transform: rotate(180deg); }
+
+.section-body { display: block; }
+.section-body.collapsed { display: none; }
+
+/* ── Form elements ───────────────────────── */
+.field { margin-bottom: 12px; }
+.field:last-child { margin-bottom: 0; }
+
+label {
+  display: block;
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+input[type=text], textarea, select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 8px 10px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  resize: vertical;
+  appearance: none;
+}
+
+input[type=text]:focus, textarea:focus, select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239896a8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  cursor: pointer;
+}
+
+select option { background: var(--bg3); }
+
+textarea { min-height: 80px; line-height: 1.5; }
+
+/* System prompt textarea taller */
+#sysprompt { min-height: 240px; font-size: 11.5px; }
+
+/* ── Tag chips ───────────────────────────── */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.chip {
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent2); }
+.chip.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent2); }
+
+/* ── Color palette picker ────────────────── */
+.palette-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.palette-opt {
+  height: 36px;
+  border-radius: var(--radius);
+  border: 2px solid transparent;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s;
+  overflow: hidden;
+}
+.palette-opt:hover { transform: scale(1.05); }
+.palette-opt.active { border-color: var(--text); }
+.palette-opt .swatch {
+  width: 100%; height: 100%;
+  display: flex;
+}
+.palette-opt .swatch span { flex: 1; }
+
+/* ── Range slider ────────────────────────── */
+.range-row { display: flex; align-items: center; gap: 10px; }
+.range-row input[type=range] { flex: 1; appearance: none; height: 3px; background: var(--border2); border-radius: 2px; outline: none; border: none; padding: 0; box-shadow: none; }
+.range-row input[type=range]::-webkit-slider-thumb { appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+.range-row .val { font-size: 12px; color: var(--accent2); min-width: 32px; text-align: right; }
+
+/* ── Toggle ──────────────────────────────── */
+.toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.toggle-row label { margin: 0; text-transform: none; font-size: 12px; color: var(--text2); letter-spacing: 0; }
+.toggle {
+  width: 34px; height: 18px;
+  background: var(--border2);
+  border-radius: 9px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.toggle.on { background: var(--accent); }
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: white;
+  top: 3px; left: 3px;
+  transition: left 0.2s;
+}
+.toggle.on::after { left: 19px; }
+
+/* ── Generate button ─────────────────────── */
+.prov-panel { }
+.provider-note {
+  font-size: 11px;
+  color: var(--text2);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 11px;
+  margin-bottom: 10px;
+  line-height: 1.9;
+}
+.provider-note.warn { border-color: rgba(245,166,35,0.4); background: rgba(245,166,35,0.07); color: var(--text2); }
+.provider-note strong { color: var(--text); }
+.provider-note.warn strong { color: var(--warn); }
+.provider-note code {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  background: rgba(0,0,0,0.35);
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: var(--accent2);
+  display: inline-block;
+}
+
+.gen-btn {
+  width: 100%;
+  padding: 11px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: -0.2px;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.gen-btn:hover { background: #8f7ef9; box-shadow: 0 4px 18px var(--accent-glow); }
+.gen-btn:active { transform: scale(0.98); }
+.gen-btn:disabled { background: var(--bg3); color: var(--text3); cursor: not-allowed; box-shadow: none; }
+
+.gen-btn .spinner {
+  display: none;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  position: absolute;
+  right: 16px; top: 50%;
+  transform: translateY(-50%);
+}
+.gen-btn.running .spinner { display: block; }
+
+@keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+/* ── Status bar ──────────────────────────── */
+.status-bar {
+  margin: 12px 0 0;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  font-size: 11.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg3);
+  color: var(--text3);
+  border: 1px solid var(--border);
+  min-height: 34px;
+}
+.status-bar.loading { color: var(--info); border-color: rgba(96,180,247,0.3); background: rgba(96,180,247,0.07); }
+.status-bar.ok { color: var(--success); border-color: rgba(61,214,140,0.3); background: var(--success-bg); }
+.status-bar.error { color: var(--danger); border-color: rgba(240,107,107,0.3); background: var(--danger-bg); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.status-bar.loading .status-dot { animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── Canvas area ─────────────────────────── */
+.canvas-area {
+  background: var(--bg);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.canvas-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  flex-shrink: 0;
+}
+
+.tb-btn {
+  padding: 5px 12px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tb-btn:hover { border-color: var(--accent); color: var(--accent2); background: var(--accent-dim); }
+.tb-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent2); }
+.tb-sep { width: 1px; height: 18px; background: var(--border); margin: 0 2px; }
+
+.zoom-val { font-size: 11px; color: var(--text3); min-width: 40px; text-align: center; }
+
+.canvas-scroll {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px;
+}
+
+.canvas-inner {
+  transform-origin: top center;
+  transition: transform 0.2s;
+}
+
+.placeholder {
+  width: 700px;
+  height: 500px;
+  border: 1px dashed var(--border2);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--text3);
+}
+
+.placeholder svg { opacity: 0.4; }
+.placeholder p { font-size: 13px; }
+.placeholder small { font-size: 11px; color: var(--text3); opacity: 0.6; }
+
+#svg-output { display: block; }
+#svg-output svg { display: block; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 8px 48px rgba(0,0,0,0.5); }
+
+/* raw source tab */
+#raw-output {
+  display: none;
+  width: 700px;
+  max-height: 80vh;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  font-size: 11px;
+  color: var(--text2);
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow: auto;
+  line-height: 1.6;
+}
+
+/* ── Scrollbar ───────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* ── Responsive tweaks ───────────────────── */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: auto; }
+  .sidebar { max-height: 60vh; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+    </div>
+    Infograph Studio
+  </div>
+  <span class="header-tag">AI · SVG · Web Search</span>
+</header>
+
+<div class="layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+
+    <!-- Provider -->
+    <div class="section">
+      <div class="section-head" onclick="toggleSection(this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+        <span class="section-label">Provider</span>
+        <svg class="chevron open" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label>Backend</label>
+          <select id="provider" onchange="onProviderChange()">
+            <option value="anthropic">Anthropic (claude.ai managed key)</option>
+            <option value="ollama">Ollama (local)</option>
+            <option value="openai_compat">OpenAI-compatible endpoint</option>
+          </select>
+        </div>
+
+        <!-- Anthropic hint -->
+        <div id="prov-anthropic" class="prov-panel">
+          <div class="provider-note">
+            Key is injected automatically by claude.ai. Web search tool is available.
+          </div>
+          <div class="field">
+            <label>Model</label>
+            <input type="text" id="model-anthropic" value="claude-sonnet-4-20250514" />
+          </div>
+        </div>
+
+        <!-- Ollama panel -->
+        <div id="prov-ollama" class="prov-panel" style="display:none">
+          <div class="provider-note" id="cors-note">
+            <strong>⚠ CORS required.</strong> Ollama blocks cross-origin requests by default. Fix on your server:<br><br>
+            <strong>Systemd (most Linux):</strong><br>
+            <code>sudo systemctl edit ollama</code><br>
+            Add under <code>[Service]</code>:<br>
+            <code>Environment="OLLAMA_ORIGINS=*"</code><br>
+            Then: <code>sudo systemctl restart ollama</code><br><br>
+            <strong>Or set env var directly:</strong><br>
+            <code>OLLAMA_ORIGINS="*" ollama serve</code><br><br>
+            <strong>Open WebUI:</strong> already handles CORS — point URL at <code>:3000</code> instead.
+          </div>
+          <div class="field">
+            <label>Base URL</label>
+            <input type="text" id="ollama-url" value="http://localhost:8080" placeholder="http://localhost:11434" oninput="updateCorsHint()" />
+          </div>
+          <div class="field">
+            <label>Model</label>
+            <input type="text" id="ollama-model" value="gemma3:latest" placeholder="gemma3:latest, llama3.2, etc." />
+          </div>
+          <div class="field">
+            <label>Context size (num_ctx)</label>
+            <div class="range-row">
+              <input type="range" id="ollama-ctx" min="2048" max="32768" step="2048" value="8192" oninput="document.getElementById('ollama-ctx-val').textContent=parseInt(this.value).toLocaleString()" />
+              <span class="val" id="ollama-ctx-val">8,192</span>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <label>Web search via Open WebUI pipeline</label>
+            <div class="toggle on" id="tog-ollama-search" onclick="toggleTog(this);updateSearchesVisibility();rebuildPrompt()"></div>
+          </div>
+        </div>
+
+        <!-- OpenAI-compat panel -->
+        <div id="prov-openai" class="prov-panel" style="display:none">
+          <div class="provider-note">
+            Any server that speaks <code>POST /v1/chat/completions</code> (vLLM, LM Studio, Together, Groq, etc.)
+          </div>
+          <div class="field">
+            <label>Base URL</label>
+            <input type="text" id="oai-url" value="http://localhost:8000" placeholder="https://api.together.xyz" />
+          </div>
+          <div class="field">
+            <label>API key (leave blank if not required)</label>
+            <input type="text" id="oai-key" placeholder="sk-…" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label>Model</label>
+            <input type="text" id="oai-model" value="meta-llama/Llama-3.3-70B-Instruct-Turbo" placeholder="model name" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topic -->
+    <div class="section">
+      <div class="section-head" onclick="toggleSection(this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <span class="section-label">Topic</span>
+        <svg class="chevron open" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label>Subject</label>
+          <input type="text" id="topic" placeholder="e.g. Global EV adoption 2024" value="Global renewable energy trends 2024" />
+        </div>
+        <div class="field">
+          <label>Quick picks</label>
+          <div class="chips" id="topic-chips">
+            <span class="chip" onclick="setTopic(this,'Global AI investment trends 2024')">AI investment</span>
+            <span class="chip" onclick="setTopic(this,'Worldwide ocean plastic pollution 2024')">Ocean plastic</span>
+            <span class="chip" onclick="setTopic(this,'Global EV sales and adoption 2024')">EV adoption</span>
+            <span class="chip" onclick="setTopic(this,'World food insecurity statistics 2024')">Food security</span>
+            <span class="chip" onclick="setTopic(this,'Global mental health crisis statistics 2024')">Mental health</span>
+            <span class="chip" onclick="setTopic(this,'Cryptocurrency market overview 2024')">Crypto market</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layout & Dimensions -->
+    <div class="section">
+      <div class="section-head" onclick="toggleSection(this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        <span class="section-label">Layout</span>
+        <svg class="chevron open" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label>Format</label>
+          <select id="format">
+            <option value="portrait_tall">Portrait tall — 700 × 1000</option>
+            <option value="portrait">Portrait — 700 × 900</option>
+            <option value="landscape">Landscape — 1000 × 700</option>
+            <option value="square">Square — 800 × 800</option>
+            <option value="story">Story / Mobile — 400 × 700</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Chart style</label>
+          <div class="chips" id="chart-chips">
+            <span class="chip active" data-val="auto">Auto</span>
+            <span class="chip" data-val="bar">Bar</span>
+            <span class="chip" data-val="donut">Donut</span>
+            <span class="chip" data-val="line">Line</span>
+            <span class="chip" data-val="treemap">Treemap</span>
+            <span class="chip" data-val="timeline">Timeline</span>
+            <span class="chip" data-val="stat-cards">Stat cards</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Data depth</label>
+          <select id="depth">
+            <option value="compact">Compact — top 5 stats</option>
+            <option value="standard" selected>Standard — 8–12 data points</option>
+            <option value="detailed">Detailed — 15+ data points</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual style -->
+    <div class="section">
+      <div class="section-head" onclick="toggleSection(this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+        <span class="section-label">Visual style</span>
+        <svg class="chevron open" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label>Theme</label>
+          <select id="theme">
+            <option value="dark">Dark — deep backgrounds</option>
+            <option value="light">Light — clean white</option>
+            <option value="sepia">Sepia — editorial warm</option>
+            <option value="midnight">Midnight — near-black</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Accent palette</label>
+          <div class="palette-grid" id="palette-grid">
+            <div class="palette-opt active" data-colors="#7c6af7,#a594f9,#c4b9fc" title="Purple">
+              <div class="swatch"><span style="background:#7c6af7"></span><span style="background:#a594f9"></span><span style="background:#c4b9fc"></span></div>
+            </div>
+            <div class="palette-opt" data-colors="#f06b6b,#f5a623,#f9d56e" title="Sunset">
+              <div class="swatch"><span style="background:#f06b6b"></span><span style="background:#f5a623"></span><span style="background:#f9d56e"></span></div>
+            </div>
+            <div class="palette-opt" data-colors="#3dd68c,#60b4f7,#b794f4" title="Neon">
+              <div class="swatch"><span style="background:#3dd68c"></span><span style="background:#60b4f7"></span><span style="background:#b794f4"></span></div>
+            </div>
+            <div class="palette-opt" data-colors="#e8c97a,#c9a227,#8a6914" title="Gold">
+              <div class="swatch"><span style="background:#e8c97a"></span><span style="background:#c9a227"></span><span style="background:#8a6914"></span></div>
+            </div>
+            <div class="palette-opt" data-colors="#60b4f7,#3d7eff,#1a3f8f" title="Ocean">
+              <div class="swatch"><span style="background:#60b4f7"></span><span style="background:#3d7eff"></span><span style="background:#1a3f8f"></span></div>
+            </div>
+            <div class="palette-opt" data-colors="#f78da7,#e040a8,#9c1258" title="Rose">
+              <div class="swatch"><span style="background:#f78da7"></span><span style="background:#e040a8"></span><span style="background:#9c1258"></span></div>
+            </div>
+            <div class="palette-opt" data-colors="#82e0aa,#2ecc71,#1a7a43" title="Forest">
+              <div class="swatch"><span style="background:#82e0aa"></span><span style="background:#2ecc71"></span><span style="background:#1a7a43"></span></div>
+            </div>
+            <div class="palette-opt" data-colors="#bdc3c7,#95a5a6,#707b7c" title="Mono">
+              <div class="swatch"><span style="background:#bdc3c7"></span><span style="background:#95a5a6"></span><span style="background:#707b7c"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Typography style</label>
+          <select id="typo">
+            <option value="modern">Modern geometric sans</option>
+            <option value="editorial">Editorial serif + sans</option>
+            <option value="mono">Technical monospace</option>
+            <option value="humanist">Humanist rounded</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Corner style</label>
+          <div class="chips" id="corner-chips">
+            <span class="chip active" data-val="rounded">Rounded</span>
+            <span class="chip" data-val="sharp">Sharp</span>
+            <span class="chip" data-val="pill">Pill</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content options -->
+    <div class="section">
+      <div class="section-head" onclick="toggleSection(this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span class="section-label">Content</span>
+        <svg class="chevron open" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="section-body">
+        <div class="toggle-row">
+          <label>Include source citations</label>
+          <div class="toggle on" id="tog-sources" onclick="toggleTog(this)"></div>
+        </div>
+        <div class="toggle-row">
+          <label>Include key insights text</label>
+          <div class="toggle on" id="tog-insights" onclick="toggleTog(this)"></div>
+        </div>
+        <div class="toggle-row">
+          <label>Include date / timestamp</label>
+          <div class="toggle on" id="tog-date" onclick="toggleTog(this)"></div>
+        </div>
+        <div class="toggle-row">
+          <label>Include data labels on charts</label>
+          <div class="toggle on" id="tog-labels" onclick="toggleTog(this)"></div>
+        </div>
+        <div class="toggle-row">
+          <label>Include legend</label>
+          <div class="toggle on" id="tog-legend" onclick="toggleTog(this)"></div>
+        </div>
+        <div class="field" style="margin-top:10px;">
+          <label>Number of searches</label>
+          <div class="range-row">
+            <input type="range" id="searches" min="1" max="6" value="3" step="1" oninput="document.getElementById('searches-val').textContent=this.value" />
+            <span class="val" id="searches-val">3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- System prompt -->
+    <div class="section">
+      <div class="section-head" onclick="toggleSection(this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        <span class="section-label">System prompt</span>
+        <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="section-body collapsed">
+        <div class="field">
+          <label>Edit raw prompt (auto-built from options above)</label>
+          <textarea id="sysprompt"></textarea>
+        </div>
+        <button class="tb-btn" style="width:100%;margin-top:4px;" onclick="rebuildPrompt();document.querySelector('#sysprompt').style.borderColor='var(--success)'">Rebuild from options</button>
+      </div>
+    </div>
+
+    <!-- Generate -->
+    <div class="section" style="border-bottom:none;">
+      <button class="gen-btn" id="gen-btn" onclick="generate()">
+        Generate infographic
+        <div class="spinner"></div>
+      </button>
+      <div class="status-bar" id="status">
+        <span class="status-dot"></span>
+        <span id="status-text">Ready — configure options and generate.</span>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══ CANVAS ══ -->
+  <main class="canvas-area">
+    <div class="canvas-toolbar">
+      <button class="tb-btn active" id="tab-render" onclick="showTab('render')">Rendered</button>
+      <button class="tb-btn" id="tab-raw" onclick="showTab('raw')">SVG source</button>
+      <button class="tb-btn" id="tab-prompt" onclick="showTab('prompt')">Prompt</button>
+      <button class="tb-btn" id="tab-paste" onclick="showTab('paste')">Paste SVG</button>
+      <button class="tb-btn" id="tab-t2i" onclick="showTab('t2i')">🎨 T2I Prompt</button>
+      <div class="tb-sep"></div>
+      <button class="tb-btn" onclick="zoom(-0.1)">−</button>
+      <span class="zoom-val" id="zoom-val">100%</span>
+      <button class="tb-btn" onclick="zoom(0.1)">+</button>
+      <button class="tb-btn" onclick="zoomFit()">Fit</button>
+      <div class="tb-sep"></div>
+      <button class="tb-btn" onclick="downloadSVG()">↓ SVG</button>
+      <button class="tb-btn" onclick="copyPrompt()">Copy prompt</button>
+    </div>
+    <div class="canvas-scroll" id="canvas-scroll">
+      <div class="canvas-inner" id="canvas-inner">
+        <div id="svg-output">
+          <div class="placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M3 9h18M9 21V9"/>
+              <circle cx="6" cy="6" r="0.5" fill="currentColor"/>
+            </svg>
+            <p>No infographic yet</p>
+            <small>Configure options and click Generate</small>
+          </div>
+        </div>
+        <pre id="raw-output"></pre>
+
+        <!-- Prompt view panel -->
+        <div id="prompt-output" style="display:none; width:700px; max-width:100%;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+            <span style="font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text)">Full prompt — copy and paste into Open WebUI, Ollama CLI, or any chat interface</span>
+            <button class="tb-btn" onclick="copyPromptToClip()">Copy all</button>
+          </div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+            <div style="background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 14px;display:flex;gap:8px;align-items:center;">
+              <span style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;">SYSTEM</span>
+            </div>
+            <pre id="prompt-system" style="padding:14px;font-size:11.5px;color:var(--text2);white-space:pre-wrap;word-break:break-word;max-height:340px;overflow:auto;line-height:1.7;margin:0;"></pre>
+            <div style="background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:7px 14px;display:flex;gap:8px;align-items:center;">
+              <span style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;">USER</span>
+            </div>
+            <pre id="prompt-user" style="padding:14px;font-size:11.5px;color:var(--accent2);white-space:pre-wrap;word-break:break-word;line-height:1.7;margin:0;"></pre>
+          </div>
+          <div class="provider-note" style="margin-top:12px;">
+            <strong>CLI usage:</strong><br>
+            <code>ollama run gemma3:latest</code> → paste the system prompt, then the user message.<br><br>
+            <strong>Open WebUI:</strong> paste the system prompt into the System Prompt field of a new chat, then send the user message.<br><br>
+            Once you have the SVG output, switch to the <strong>Paste SVG</strong> tab to render it here.
+          </div>
+        </div>
+
+        <!-- Paste SVG panel -->
+        <div id="paste-output" style="display:none; width:700px; max-width:100%;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+            <span style="font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text)">Paste SVG from model output</span>
+            <div style="display:flex;gap:6px;">
+              <button class="tb-btn" onclick="clearPaste()">Clear</button>
+              <button class="tb-btn" style="background:var(--accent-dim);border-color:var(--accent);color:var(--accent2);" onclick="renderPasted()">Render ↗</button>
+            </div>
+          </div>
+          <textarea id="paste-area" placeholder="Paste the raw SVG here — starting with <svg ... and ending with </svg>" style="width:100%;min-height:220px;font-size:11.5px;line-height:1.6;border-radius:var(--radius-lg);"></textarea>
+          <div id="paste-status" class="status-bar" style="margin-top:8px;display:none;"></div>
+          <div id="paste-preview" style="margin-top:16px;"></div>
+        </div>
+
+        <!-- T2I Prompt panel -->
+        <div id="t2i-output" style="display:none; width:700px; max-width:100%;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+            <span style="font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text)">Text-to-Image Prompt Generator</span>
+            <div style="display:flex;gap:6px;">
+              <button class="tb-btn" id="t2i-gen-btn" onclick="generateT2IPrompt()">Generate ↗</button>
+              <button class="tb-btn" onclick="copyT2IPrompt()">Copy</button>
+            </div>
+          </div>
+
+          <!-- Source selector -->
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;margin-bottom:12px;">
+            <div style="margin-bottom:10px;">
+              <label style="display:block;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Source</label>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <span class="chip active" id="t2i-src-svg" onclick="setT2ISrc('svg')">From rendered SVG</span>
+                <span class="chip" id="t2i-src-topic" onclick="setT2ISrc('topic')">From topic only</span>
+              </div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <label style="display:block;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Image style</label>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;" id="t2i-style-chips">
+                <span class="chip active" data-val="infographic">Infographic / editorial</span>
+                <span class="chip" data-val="photorealistic">Photorealistic</span>
+                <span class="chip" data-val="isometric">Isometric 3D</span>
+                <span class="chip" data-val="flatdesign">Flat design</span>
+                <span class="chip" data-val="dataviz">Data visualisation art</span>
+                <span class="chip" data-val="cinematic">Cinematic poster</span>
+                <span class="chip" data-val="handdrawn">Hand-drawn / sketch</span>
+              </div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <label style="display:block;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Aspect ratio</label>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;" id="t2i-ar-chips">
+                <span class="chip active" data-val="portrait">Portrait 2:3</span>
+                <span class="chip" data-val="landscape">Landscape 3:2</span>
+                <span class="chip" data-val="square">Square 1:1</span>
+                <span class="chip" data-val="wide">Wide 16:9</span>
+              </div>
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Extra style notes (optional)</label>
+              <input type="text" id="t2i-extra" placeholder="e.g. neon glow, dark background, inspired by Kurzgesagt" style="width:100%;" />
+            </div>
+          </div>
+
+          <div id="t2i-status" class="status-bar" style="margin-bottom:10px;">
+            <span class="status-dot"></span>
+            <span id="t2i-status-text">Configure options above and click Generate.</span>
+          </div>
+
+          <!-- Output blocks -->
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+            <div style="background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 14px;display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;">POSITIVE PROMPT</span>
+              <button class="tb-btn" style="font-size:10px;padding:3px 8px;" onclick="copySection('t2i-positive')">Copy</button>
+            </div>
+            <pre id="t2i-positive" style="padding:14px;font-size:12px;color:var(--text);white-space:pre-wrap;word-break:break-word;line-height:1.8;margin:0;min-height:60px;">—</pre>
+
+            <div style="background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:7px 14px;display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;">NEGATIVE PROMPT</span>
+              <button class="tb-btn" style="font-size:10px;padding:3px 8px;" onclick="copySection('t2i-negative')">Copy</button>
+            </div>
+            <pre id="t2i-negative" style="padding:14px;font-size:12px;color:var(--danger);white-space:pre-wrap;word-break:break-word;line-height:1.8;margin:0;min-height:40px;">—</pre>
+
+            <div style="background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:7px 14px;">
+              <span style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;">SUGGESTED COMFYUI SETTINGS</span>
+            </div>
+            <pre id="t2i-settings" style="padding:14px;font-size:11.5px;color:var(--text2);white-space:pre-wrap;word-break:break-word;line-height:1.8;margin:0;min-height:40px;">—</pre>
+          </div>
+
+          <div class="provider-note" style="margin-top:12px;">
+            Generated via <strong>Anthropic API</strong> (claude.ai managed key). The positive prompt is structured for SDXL / Flux / Stable Diffusion with weighted emphasis tags. Paste directly into ComfyUI's CLIPTextEncode node.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ── State ────────────────────────────────────────
+let currentZoom = 1;
+let lastSVG = '';
+let selectedPalette = '#7c6af7,#a594f9,#c4b9fc';
+let selectedChart = 'auto';
+let selectedCorner = 'rounded';
+
+// ── Provider switcher ─────────────────────────────
+function updateCorsHint() {
+  const url = document.getElementById('ollama-url').value.trim();
+  const note = document.getElementById('cors-note');
+  if (!note) return;
+  // If pointing at Open WebUI port (3000/8080) hint changes
+  const isWebUI = /:(3000|8080)\b/.test(url);
+  if (isWebUI) {
+    note.className = 'provider-note';
+    note.innerHTML = `<strong>✓ Open WebUI detected.</strong> CORS is handled automatically. Web search available via its pipeline.`;
+  } else {
+    note.className = 'provider-note warn';
+    note.innerHTML = `<strong>⚠ CORS required.</strong> Ollama blocks cross-origin requests by default. Fix on your server:<br><br>
+<strong>Systemd (most Linux):</strong><br>
+<code>sudo systemctl edit ollama</code><br>
+Add under <code>[Service]</code>:<br>
+<code>Environment="OLLAMA_ORIGINS=*"</code><br>
+Then: <code>sudo systemctl restart ollama</code><br><br>
+<strong>Or set env var directly:</strong><br>
+<code>OLLAMA_ORIGINS="*" ollama serve</code><br><br>
+<strong>Open WebUI:</strong> already handles CORS — point URL at <code>:3000</code> instead.`;
+  }
+}
+
+function onProviderChange() {
+  const p = document.getElementById('provider').value;
+  document.getElementById('prov-anthropic').style.display = p === 'anthropic'     ? '' : 'none';
+  document.getElementById('prov-ollama').style.display    = p === 'ollama'        ? '' : 'none';
+  document.getElementById('prov-openai').style.display    = p === 'openai_compat' ? '' : 'none';
+  updateSearchesVisibility();
+  rebuildPrompt();
+}
+
+function updateSearchesVisibility() {
+  const p = document.getElementById('provider').value;
+  const ollamaSearch = p === 'ollama' && togVal('tog-ollama-search');
+  const enabled = p === 'anthropic' || ollamaSearch;
+  document.getElementById('searches').closest('.field').style.opacity = enabled ? '1' : '0.35';
+  document.getElementById('searches').disabled = !enabled;
+}
+
+// ── Section collapse ─────────────────────────────
+function toggleSection(head) {
+  const body = head.nextElementSibling;
+  const chevron = head.querySelector('.chevron');
+  body.classList.toggle('collapsed');
+  chevron.classList.toggle('open');
+}
+
+// ── Chip groups ───────────────────────────────────
+document.getElementById('chart-chips').addEventListener('click', e => {
+  if (!e.target.classList.contains('chip')) return;
+  document.querySelectorAll('#chart-chips .chip').forEach(c => c.classList.remove('active'));
+  e.target.classList.add('active');
+  selectedChart = e.target.dataset.val;
+});
+
+document.getElementById('corner-chips').addEventListener('click', e => {
+  if (!e.target.classList.contains('chip')) return;
+  document.querySelectorAll('#corner-chips .chip').forEach(c => c.classList.remove('active'));
+  e.target.classList.add('active');
+  selectedCorner = e.target.dataset.val;
+});
+
+// ── Palette ───────────────────────────────────────
+document.getElementById('palette-grid').addEventListener('click', e => {
+  const opt = e.target.closest('.palette-opt');
+  if (!opt) return;
+  document.querySelectorAll('.palette-opt').forEach(p => p.classList.remove('active'));
+  opt.classList.add('active');
+  selectedPalette = opt.dataset.colors;
+});
+
+// ── Topic chips ───────────────────────────────────
+function setTopic(el, val) {
+  document.getElementById('topic').value = val;
+  document.querySelectorAll('#topic-chips .chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── Toggle ────────────────────────────────────────
+function toggleTog(el) { el.classList.toggle('on'); }
+function togVal(id) { const el = document.getElementById(id); return el ? el.classList.contains('on') : false; }
+
+// ── Zoom ──────────────────────────────────────────
+function zoom(delta) {
+  currentZoom = Math.min(2, Math.max(0.25, currentZoom + delta));
+  applyZoom();
+}
+function zoomFit() {
+  const svg = document.querySelector('#svg-output svg');
+  if (!svg) { currentZoom = 1; applyZoom(); return; }
+  const vbW = parseFloat(svg.getAttribute('viewBox')?.split(' ')[2]) || 700;
+  const scrollW = document.getElementById('canvas-scroll').clientWidth - 56;
+  currentZoom = Math.min(1.5, Math.max(0.2, scrollW / vbW));
+  applyZoom();
+}
+function applyZoom() {
+  document.getElementById('canvas-inner').style.transform = `scale(${currentZoom})`;
+  document.getElementById('zoom-val').textContent = Math.round(currentZoom * 100) + '%';
+}
+
+// ── Tab switch ────────────────────────────────────
+function showTab(tab) {
+  const tabs = ['render','raw','prompt','paste','t2i'];
+  tabs.forEach(t => {
+    const btn = document.getElementById('tab-' + t);
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+  document.getElementById('svg-output').style.display    = tab === 'render' ? 'block' : 'none';
+  document.getElementById('raw-output').style.display    = tab === 'raw'    ? 'block' : 'none';
+  document.getElementById('prompt-output').style.display = tab === 'prompt' ? 'block' : 'none';
+  document.getElementById('paste-output').style.display  = tab === 'paste'  ? 'block' : 'none';
+  document.getElementById('t2i-output').style.display    = tab === 't2i'    ? 'block' : 'none';
+
+  if (tab === 'raw') {
+    document.getElementById('raw-output').textContent = lastSVG || '(nothing generated yet)';
+  }
+  if (tab === 'prompt') {
+    rebuildPrompt();
+    const topic = document.getElementById('topic').value.trim() || 'your topic';
+    document.getElementById('prompt-system').textContent = document.getElementById('sysprompt').value;
+    document.getElementById('prompt-user').textContent   = `Create an infographic about: ${topic}`;
+  }
+}
+
+function copyPromptToClip() {
+  rebuildPrompt();
+  const topic = document.getElementById('topic').value.trim() || 'your topic';
+  const full = `[SYSTEM]\n${document.getElementById('sysprompt').value}\n\n[USER]\nCreate an infographic about: ${topic}`;
+  copyToClipboard(full, 'Full prompt copied to clipboard.');
+}
+
+function clearPaste() {
+  document.getElementById('paste-area').value = '';
+  document.getElementById('paste-preview').innerHTML = '';
+  document.getElementById('paste-status').style.display = 'none';
+}
+
+function renderPasted() {
+  const raw = document.getElementById('paste-area').value.trim();
+  const statusEl = document.getElementById('paste-status');
+  const preview  = document.getElementById('paste-preview');
+  statusEl.style.display = 'flex';
+
+  if (!raw) {
+    statusEl.className = 'status-bar error';
+    statusEl.innerHTML = '<span class="status-dot"></span>Nothing to render — paste SVG first.';
+    return;
+  }
+
+  // Strip markdown fences
+  const cleaned = raw.replace(/```(?:svg|xml)?/gi,'').replace(/```/g,'').trim();
+  const match = cleaned.match(/<svg[\s\S]*<\/svg>/i);
+
+  if (!match) {
+    statusEl.className = 'status-bar error';
+    statusEl.innerHTML = '<span class="status-dot"></span>No &lt;svg&gt; tag found. Make sure you copied the full output.';
+    preview.innerHTML = '';
+    return;
+  }
+
+  lastSVG = match[0];
+  preview.innerHTML = lastSVG;
+  statusEl.className = 'status-bar ok';
+  statusEl.innerHTML = '<span class="status-dot"></span>Rendered. Switch to the Rendered tab or download below.';
+
+  // Also load into render tab
+  document.getElementById('svg-output').innerHTML = lastSVG;
+  document.getElementById('raw-output').textContent = lastSVG;
+}
+
+// ── T2I state ─────────────────────────────────────
+let t2iSrc = 'svg';
+let t2iStyle = 'infographic';
+let t2iAR = 'portrait';
+
+function setT2ISrc(val) {
+  t2iSrc = val;
+  document.getElementById('t2i-src-svg').classList.toggle('active', val === 'svg');
+  document.getElementById('t2i-src-topic').classList.toggle('active', val === 'topic');
+}
+
+document.getElementById('t2i-style-chips').addEventListener('click', e => {
+  if (!e.target.classList.contains('chip')) return;
+  document.querySelectorAll('#t2i-style-chips .chip').forEach(c => c.classList.remove('active'));
+  e.target.classList.add('active');
+  t2iStyle = e.target.dataset.val;
+});
+
+document.getElementById('t2i-ar-chips').addEventListener('click', e => {
+  if (!e.target.classList.contains('chip')) return;
+  document.querySelectorAll('#t2i-ar-chips .chip').forEach(c => c.classList.remove('active'));
+  e.target.classList.add('active');
+  t2iAR = e.target.dataset.val;
+});
+
+function setT2IStatus(msg, type='') {
+  const bar = document.getElementById('t2i-status');
+  const txt = document.getElementById('t2i-status-text');
+  bar.className = 'status-bar' + (type ? ' ' + type : '');
+  txt.textContent = msg;
+}
+
+function buildT2ISystemPrompt() {
+  const styleDescriptions = {
+    infographic:    'a professional editorial infographic illustration with clean typography, structured layout, data visualisation elements, icons, and a cohesive color palette — suitable for publication',
+    photorealistic: 'a photorealistic scene depicting the subject with dramatic lighting, depth of field, and high detail — photographic quality',
+    isometric:      'a detailed isometric 3D illustration with clean lines, flat shading, and a structured grid layout — vector art style',
+    flatdesign:     'a minimal flat design illustration with solid colors, simple geometric shapes, no gradients, and bold typography',
+    dataviz:        'an abstract data visualisation artwork — flowing data streams, glowing nodes, network graphs, and luminous particles on a dark background',
+    cinematic:      'a cinematic wide-format poster with dramatic lighting, rich colors, atmospheric depth, and bold title typography',
+    handdrawn:      'a hand-drawn sketch illustration with pencil textures, loose lines, watercolor washes, and an organic editorial style',
+  };
+  const arDescriptions = {
+    portrait:  'portrait orientation 2:3, tall format',
+    landscape: 'landscape orientation 3:2, wide format',
+    square:    'square format 1:1',
+    wide:      'ultra-wide cinematic format 16:9',
+  };
+
+  return `You are an expert text-to-image prompt engineer specialising in ComfyUI, Stable Diffusion XL, and Flux workflows.
+
+Your task is to convert a data infographic description (either an SVG or a topic) into a highly detailed, structured text-to-image prompt.
+
+Output ONLY a JSON object with exactly these fields — no markdown, no explanation:
+{
+  "positive": "the full positive prompt string",
+  "negative": "the full negative prompt string",
+  "settings": "suggested ComfyUI settings as a readable multi-line string"
+}
+
+Rules for the positive prompt:
+- Open with the visual style declaration: "${styleDescriptions[t2iStyle]}"
+- Follow with the aspect ratio: "${arDescriptions[t2iAR]}"
+- Describe the infographic layout: sections, chart types, data visualised, color scheme, typography style
+- Include specific visual details from the data: key numbers, country names, chart labels, legend items — embed them naturally as visual elements (e.g. "bold text overlay reading '47% Asia'")
+- Use emphasis weighting where impactful: (key phrase:1.3), (critical element:1.5)
+- End with quality boosters: masterpiece, highly detailed, sharp focus, professional design, 8k
+
+Rules for the negative prompt:
+- blurry, low quality, watermark, text errors, misspelled words, distorted charts, overlapping elements, clipped text, broken layout, jpeg artifacts, pixelated, cartoonish, amateur
+
+Rules for settings:
+- Recommend sampler, steps, CFG scale, and resolution appropriate for the style and aspect ratio
+- Suggest a model family (SDXL, Flux, SD 1.5) best suited to the style
+- One setting per line, plain text`;
+}
+
+async function generateT2IPrompt() {
+  const topic   = document.getElementById('topic').value.trim() || 'the infographic topic';
+  const extra   = document.getElementById('t2i-extra').value.trim();
+  const hasSVG  = !!lastSVG;
+  const useSVG  = t2iSrc === 'svg' && hasSVG;
+
+  if (t2iSrc === 'svg' && !hasSVG) {
+    setT2IStatus('No SVG available — generate or paste one first, or switch source to "From topic only".', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('t2i-gen-btn');
+  btn.disabled = true;
+  setT2IStatus('Generating T2I prompt via Anthropic API…', 'loading');
+  document.getElementById('t2i-positive').textContent  = '…';
+  document.getElementById('t2i-negative').textContent  = '…';
+  document.getElementById('t2i-settings').textContent  = '…';
+
+  const userContent = useSVG
+    ? `Convert this SVG infographic into a detailed text-to-image prompt.\nTopic: ${topic}${extra ? '\nExtra style notes: ' + extra : ''}\n\nSVG:\n${lastSVG.slice(0, 6000)}${lastSVG.length > 6000 ? '\n[truncated for length]' : ''}`
+    : `Create a detailed text-to-image prompt for an infographic about: ${topic}${extra ? '\nExtra style notes: ' + extra : ''}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        system: buildT2ISystemPrompt(),
+        messages: [{ role: 'user', content: userContent }]
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    const raw  = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+
+    // Strip markdown fences if present
+    const clean = raw.replace(/```json|```/gi, '').trim();
+    let parsed;
+    try {
+      parsed = JSON.parse(clean);
+    } catch(e) {
+      // Fallback: try to extract JSON object from within the string
+      const match = clean.match(/\{[\s\S]*\}/);
+      if (!match) throw new Error('Could not parse JSON from model response.');
+      parsed = JSON.parse(match[0]);
+    }
+
+    document.getElementById('t2i-positive').textContent = parsed.positive  || '(empty)';
+    document.getElementById('t2i-negative').textContent = parsed.negative  || '(empty)';
+    document.getElementById('t2i-settings').textContent = parsed.settings  || '(empty)';
+    setT2IStatus('T2I prompt generated successfully.', 'ok');
+
+  } catch(e) {
+    setT2IStatus('Error: ' + e.message, 'error');
+    document.getElementById('t2i-positive').textContent = '—';
+    document.getElementById('t2i-negative').textContent = '—';
+    document.getElementById('t2i-settings').textContent = '—';
+  }
+
+  btn.disabled = false;
+}
+
+function copyT2IPrompt() {
+  const pos = document.getElementById('t2i-positive').textContent;
+  const neg = document.getElementById('t2i-negative').textContent;
+  const set = document.getElementById('t2i-settings').textContent;
+  if (pos === '—' || pos === '…') { setT2IStatus('Nothing to copy — generate first.', 'error'); return; }
+  const full = `POSITIVE:\n${pos}\n\nNEGATIVE:\n${neg}\n\nSETTINGS:\n${set}`;
+  copyToClipboard(full, 'T2I prompt copied to clipboard.');
+}
+
+function copySection(id) {
+  const txt = document.getElementById(id).textContent;
+  if (txt === '—' || txt === '…') return;
+  copyToClipboard(txt, 'Copied to clipboard.');
+}
+
+// ── Status ────────────────────────────────────────
+function setStatus(msg, type='') {
+  const bar = document.getElementById('status');
+  const txt = document.getElementById('status-text');
+  bar.className = 'status-bar' + (type ? ' ' + type : '');
+  txt.textContent = msg;
+}
+
+// ── Dimension map ─────────────────────────────────
+const FORMATS = {
+  portrait_tall: [700, 1000],
+  portrait: [700, 900],
+  landscape: [1000, 700],
+  square: [800, 800],
+  story: [400, 700],
+};
+
+// ── Prompt builder ────────────────────────────────
+function getOptions() {
+  const [w, h] = FORMATS[document.getElementById('format').value];
+  const palette = selectedPalette.split(',');
+  const theme = document.getElementById('theme').value;
+  const typo = document.getElementById('typo').value;
+  const depth = document.getElementById('depth').value;
+  const chartHint = selectedChart === 'auto' ? 'choose the most appropriate chart types for the data' : `use ${selectedChart} chart(s) as the primary visualisation`;
+  const cornerMap = { rounded: 'rx="6"', sharp: 'rx="0"', pill: 'rx="16"' };
+  const rx = cornerMap[selectedCorner];
+  const numSearches = document.getElementById('searches').value;
+  const provider = document.getElementById('provider').value;
+
+  const themeMap = {
+    dark:     'dark background (#1a1a2e), light text (#e8e6f0), muted secondary text (#9896a8)',
+    light:    'white background (#ffffff), dark text (#111827), muted secondary text (#6b7280)',
+    sepia:    'warm parchment background (#f5f0e8), dark brown text (#2d1a00), muted secondary (#8a7560)',
+    midnight: 'near-black background (#0a0a0f), light text (#ddd8f0), dim secondary (#6660a0)',
+  };
+  const typoMap = {
+    modern:    'Use font-family="Helvetica Neue, Arial, sans-serif" on all text elements',
+    editorial: 'Use font-family="Georgia, serif" on titles, font-family="Arial, sans-serif" on body text',
+    mono:      'Use font-family="Courier New, Courier, monospace" on all text elements',
+    humanist:  'Use font-family="Trebuchet MS, Segoe UI, sans-serif" on all text elements',
+  };
+  const depthMap = {
+    compact:  'Focus on the top 5 most striking statistics only. Keep the design spacious.',
+    standard: 'Include 8–12 data points across 2–3 visual elements.',
+    detailed: 'Include 15+ data points, multiple chart types, and a data table or ranked list.',
+  };
+
+  return { w, h, palette, themeMap: themeMap[theme], typoMap: typoMap[typo],
+    depth: depthMap[depth], chartHint, rx, numSearches, provider,
+    sources: togVal('tog-sources'), insights: togVal('tog-insights'), date: togVal('tog-date'),
+    labels: togVal('tog-labels'), legend: togVal('tog-legend') };
+}
+
+function buildPrompt() {
+  const o = getOptions();
+  const ollamaSearchOn = o.provider === 'ollama' && togVal('tog-ollama-search');
+  const hasWebSearch = o.provider === 'anthropic' || ollamaSearchOn;
+
+  const extras = [
+    o.sources  && '- A footer section listing 2–3 source names and the year',
+    o.insights && '- A highlighted "Key insight" callout box with 1–2 sentence summary',
+    o.date     && '- A small date label (current year) in the corner or footer',
+    o.labels   && '- All numeric values as text labels directly on chart elements',
+    o.legend   && '- A concise legend when more than one color is used for categories',
+  ].filter(Boolean).join('\n');
+
+  const researchBlock = hasWebSearch
+    ? `STEP 1 — RESEARCH
+Use the web_search tool to find recent, specific data about the user's topic.
+Perform exactly ${o.numSearches} searches, varying queries to collect diverse data points (statistics, percentages, rankings, year-on-year trends). Extract concrete numbers.
+
+STEP 2 — DESIGN AND RENDER
+Using ONLY the data you found, produce the infographic.`
+    : `STEP 1 — RECALL DATA
+Draw on your training knowledge to recall the most accurate, specific statistics available for the user's topic. List at least 8 concrete data points (percentages, counts, rankings, dates) before drawing anything.
+
+STEP 2 — DESIGN AND RENDER
+Using the data you recalled, produce the infographic.`;
+
+  return `You are an expert data visualisation agent that creates SVG infographics.
+
+${researchBlock}
+
+Canvas:
+- viewBox="0 0 ${o.w} ${o.h}"
+- CRITICAL: Every element (rect, text, circle, path) must have x/cx coordinates ≥ 24 and ≤ ${o.w - 24}, and y/cy coordinates ≥ 24 and ≤ ${o.h - 24}. Nothing may extend beyond these bounds.
+- Background: a single rect x="0" y="0" width="${o.w}" height="${o.h}" as the very first element
+- Theme: ${o.themeMap}
+- Accent colors (use in order): ${o.palette.join(', ')}
+
+Layout planning — do this mentally before writing any SVG:
+1. Divide the canvas into non-overlapping horizontal zones. Assign each zone a fixed y-start and y-end before writing elements.
+2. Every section must stay entirely within its assigned zone — charts, labels, and legends must not bleed into adjacent zones.
+3. Wrap long text using multiple <text> elements with increasing y offsets (line-height ~18px). Never let a single text element run past x=${o.w - 24}.
+4. For donut/pie charts: place the circle center at cx = half the allocated zone width, ensure radius + cx ≤ ${o.w - 24}. Keep the legend inside the same zone.
+5. For bar charts: ensure bar x + bar width ≤ ${o.w - 24}. Leave at least 8px gap between bars.
+6. For line charts: all polyline points must have x ≤ ${o.w - 24} and y within the zone.
+
+Typography:
+- ${o.typoMap}
+- Title: 22–26px font-weight="700"
+- Section headings: 14–16px font-weight="600"
+- Body / labels: 11–13px font-weight="400"
+- Clip guard: no text x value may exceed ${o.w - 28}. If a label is long, reduce font-size to fit.
+
+Charts:
+- ${o.chartHint}
+- ${o.depth}
+- Corner radius on rect shapes: ${o.rx}
+- SVG primitives only (rect, circle, line, path, text, polyline) — no foreignObject, no images, no external refs
+- Space between chart sections: minimum 20px vertical gap
+
+Required sections:
+- A prominent title and subtitle at the top
+${extras}
+
+Output rules:
+- Return ONLY the raw SVG starting with <svg and ending with </svg> — no markdown, no fences, no explanation
+- All colors as hardcoded hex values (no CSS variables or named colors)
+- Before closing </svg>, mentally verify: does any element exceed the viewBox bounds? If yes, fix it.`;}
+
+function rebuildPrompt() {
+  document.getElementById('sysprompt').value = buildPrompt();
+}
+
+// ── API call: Anthropic ───────────────────────────
+async function callAnthropic(sysprompt, userMsg) {
+  const model = document.getElementById('model-anthropic').value.trim() || 'claude-sonnet-4-20250514';
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model,
+      max_tokens: 8192,
+      system: sysprompt,
+      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+      messages: [{ role: 'user', content: userMsg }]
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err?.error?.message || `HTTP ${res.status}`);
+  }
+  const data = await res.json();
+  return data.content.filter(b => b.type === 'text').map(b => b.text).join('\n');
+}
+
+// ── API call: OpenAI-compatible (Ollama / vLLM / etc.) ──
+async function callOpenAICompat(sysprompt, userMsg, baseURL, model, apiKey, numCtx) {
+  // Normalise base URL — strip trailing slash
+  baseURL = baseURL.replace(/\/$/, '');
+  const endpoint = `${baseURL}/v1/chat/completions`;
+
+  const headers = { 'Content-Type': 'application/json' };
+  if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
+
+  const body = {
+    model,
+    max_tokens: 8192,
+    messages: [
+      { role: 'system', content: sysprompt },
+      { role: 'user',   content: userMsg }
+    ]
+  };
+
+  // Pass num_ctx for Ollama via options field
+  if (numCtx) body.options = { num_ctx: parseInt(numCtx) };
+
+  const res = await fetch(endpoint, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body)
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err?.error?.message || `HTTP ${res.status} from ${endpoint}`);
+  }
+
+  const data = await res.json();
+  // OpenAI-compat response shape
+  return data.choices?.[0]?.message?.content || '';
+}
+
+// ── Generate ──────────────────────────────────────
+async function generate() {
+  const topic = document.getElementById('topic').value.trim();
+  if (!topic) { setStatus('Please enter a topic first.', 'error'); return; }
+
+  rebuildPrompt();
+  const sysprompt = document.getElementById('sysprompt').value;
+  const provider  = document.getElementById('provider').value;
+  const userMsg   = `Create an infographic about: ${topic}`;
+
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.classList.add('running');
+
+  lastSVG = '';
+  document.getElementById('svg-output').innerHTML = `<div class="placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><p>Generating…</p><small>${provider === 'anthropic' ? 'Searching the web for live data' : 'Calling local model…'}</small></div>`;
+  showTab('render');
+
+  const providerLabel = { anthropic: 'Anthropic', ollama: 'Ollama', openai_compat: 'OpenAI-compat' }[provider];
+  setStatus(`Calling ${providerLabel}…`, 'loading');
+
+  try {
+    let rawText = '';
+
+    if (provider === 'anthropic') {
+      rawText = await callAnthropic(sysprompt, userMsg);
+
+    } else if (provider === 'ollama') {
+      const baseURL = document.getElementById('ollama-url').value.trim() || 'http://localhost:11434';
+      const model   = document.getElementById('ollama-model').value.trim() || 'gemma3:latest';
+      const numCtx  = document.getElementById('ollama-ctx').value;
+      // Optional CORS proxy via corsproxy.io when toggled
+      const effectiveBase = baseURL;
+      setStatus(`Calling Ollama at ${baseURL} (model: ${model})…`, 'loading');
+      rawText = await callOpenAICompat(sysprompt, userMsg, effectiveBase, model, '', numCtx);
+
+    } else {
+      const baseURL = document.getElementById('oai-url').value.trim();
+      const model   = document.getElementById('oai-model').value.trim();
+      const apiKey  = document.getElementById('oai-key').value.trim();
+      setStatus(`Calling ${baseURL}…`, 'loading');
+      rawText = await callOpenAICompat(sysprompt, userMsg, baseURL, model, apiKey, null);
+    }
+
+    setStatus('Extracting SVG…', 'loading');
+
+    // Strip markdown fences if model wrapped the SVG
+    const cleaned = rawText.replace(/```(?:svg|xml)?/gi, '').replace(/```/g, '');
+    const match = cleaned.match(/<svg[\s\S]*<\/svg>/i);
+
+    if (!match) {
+      document.getElementById('svg-output').innerHTML = `<div class="placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><p>No SVG found in response</p><small>Check the source tab — the model may have wrapped output in markdown</small></div>`;
+      document.getElementById('raw-output').textContent = rawText;
+      setStatus('No SVG detected. Check source tab or refine the prompt.', 'error');
+    } else {
+      lastSVG = match[0];
+      document.getElementById('svg-output').innerHTML = lastSVG;
+      document.getElementById('raw-output').textContent = lastSVG;
+      setStatus(`Done — rendered via ${providerLabel}.`, 'ok');
+      setTimeout(zoomFit, 100);
+    }
+  } catch(e) {
+    setStatus('Error: ' + e.message, 'error');
+    document.getElementById('svg-output').innerHTML = `<div class="placeholder"><p>Request failed</p><small>${e.message}</small></div>`;
+  }
+
+  btn.disabled = false;
+  btn.classList.remove('running');
+}
+
+// ── Download ──────────────────────────────────────
+function downloadSVG() {
+  if (!lastSVG) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([lastSVG], { type: 'image/svg+xml' }));
+  a.download = 'infographic.svg';
+  a.click();
+}
+
+function copyToClipboard(text, successMsg) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text)
+      .then(() => setStatus(successMsg, 'ok'))
+      .catch(() => fallbackCopy(text, successMsg));
+  } else {
+    fallbackCopy(text, successMsg);
+  }
+}
+
+function fallbackCopy(text, successMsg) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    setStatus(successMsg, 'ok');
+  } catch(e) {
+    setStatus('Copy failed — please copy manually from the Prompt tab.', 'error');
+  }
+  document.body.removeChild(ta);
+}
+// ── Copy prompt ───────────────────────────────────
+function copyPrompt() {
+  rebuildPrompt();
+  copyToClipboard(document.getElementById('sysprompt').value, 'Prompt copied to clipboard.');
+}
+
+// ── Init ──────────────────────────────────────────
+rebuildPrompt();
+onProviderChange();
+updateCorsHint();
+</script>
+</body>
+</html>
