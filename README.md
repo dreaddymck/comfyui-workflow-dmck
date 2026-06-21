@@ -1,6 +1,6 @@
 # ComfyUI Workflow Collection
 
-A curated collection of ComfyUI workflows known to work with NVIDIA GTX 1050ti, 4VRAM, 8RAM, 16SWAP for various image and video generation tasks.
+A curated collection of ComfyUI workflows known to work with NVIDIA GTX 1050ti, 4VRAM, 8RAM, 8SWAP for various image and video generation tasks.
 
 ### Environment
 
@@ -13,15 +13,15 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 ## Workflows
 
 ### Text-to-Image
-- **z-image-aura_workflow.json** - Text to image workflow using Z Image Turbo models
+- **Z_image_turbo.json** - Text to image workflow using Z Image Turbo
+- **Flux2_klein_4b_text_to_image.json** - Text to image workflow using Flux2 klein 4b
 
 ### Image-to-Image
-- **I2I Z IMAGE TURBO FUN UNION CNT.json** - Image-to-image workflow using Z Image Turbo models with ControlNet integration
-- **I2I_flux2_klein_image_edit_4b_distilled-latest.json** - Image-to-image workflow using Flux 2 Klein with ControlNet integration
+- **Flux2_klein_image_edit_4b_multi-latest.json** - Image-to-image workflow using Flux 2 Klein 4b
 
 ### Video Generation
-- **LTXV first last latest v1.json** - Image-to-video workflow using the LTXV distilled model, first/last frame capabilities
-- **LTXV latest.json** - Text-to-video workflow using the LTXV distilled model
+- **LTXV first last latest v1.json** - Image-to-video workflow using the LTXV 2b distilled model, first/last frame capabilities
+- **LTXV latest.json** - Text-to-video workflow using the LTXV 2b distilled model
 
 ### Image Processing
 - **UPSCALE REMOVE BACKGROUND AND MASK.json** - Upscaling workflow with automated background removal and masking
@@ -30,7 +30,7 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 - **angle-prompt-builder.html** - Build prompts for flux/zit.
 - **ace-step-prompt-generator.html** - Build prompts for Ace Step 1.5.
 - **infograph-studio.html** - Build text prompts for inforgraphs.
-- **ltxv-prompt-builder.html** - Build prompts for LTXV workflow.
+- **ltxv-prompt-builder.html** - Build prompts for the LTXV 2b workflow.
 
 ## Usage
 

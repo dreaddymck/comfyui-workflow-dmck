@@ -99,6 +99,48 @@
     letter-spacing:0.05em;
   }
 
+  .mode-toggle{
+    display:flex;
+    gap:8px;
+  }
+  .mode-btn{
+    font-family:var(--mono);
+    font-size:12px;
+    padding:9px 16px;
+    border:1px solid var(--panel-edge);
+    border-radius:2px;
+    background:#0d0f0b;
+    color:var(--ink-dim);
+    cursor:pointer;
+    flex:1;
+    transition:border-color .12s, color .12s;
+  }
+  .mode-btn:hover{border-color:var(--accent-dim);}
+  .mode-btn.active{
+    color:var(--ink);
+    border-color:var(--accent);
+    background:#1c1707;
+  }
+  .mode-desc{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--ink-dim);
+    margin-top:10px;
+    line-height:1.5;
+  }
+
+  .facet-block{ margin-bottom:16px; }
+  .facet-block:last-of-type{ margin-bottom:8px; }
+
+  .facet-note{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--teal);
+    border-top:1px solid var(--panel-edge);
+    padding-top:10px;
+    margin-top:6px;
+  }
+
   .angle-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill, minmax(150px,1fr));
@@ -241,8 +283,38 @@
   </div>
 
   <div class="panel">
+    <div class="panel-label"><span>view mode</span></div>
+    <div class="mode-toggle" id="modeToggle">
+      <button class="mode-btn active" data-mode="cinematic">Cinematic angles</button>
+      <button class="mode-btn" data-mode="turnaround">Turnaround grid</button>
+    </div>
+    <div class="mode-desc" id="modeDesc">8 hand-picked cinematic compositions — wide, eye-level, drone, low, close-up, OTS, bird's-eye, dutch tilt.</div>
+  </div>
+
+  <div class="panel" id="cinematicPanel">
     <div class="panel-label"><span>angles to generate</span><span id="angleCount">5 selected</span></div>
     <div class="angle-grid" id="angleGrid"></div>
+  </div>
+
+  <div class="panel" id="turnaroundPanel" style="display:none;">
+    <div class="panel-label"><span>turnaround grid — rotation × vertical angle × shot distance</span><span id="turnaroundCount">0 selected</span></div>
+
+    <div class="facet-block">
+      <div class="field-label">rotation (pick any)</div>
+      <div class="angle-grid" id="rotationGrid"></div>
+    </div>
+
+    <div class="facet-block">
+      <div class="field-label">vertical angle (pick any)</div>
+      <div class="angle-grid" id="verticalGrid"></div>
+    </div>
+
+    <div class="facet-block">
+      <div class="field-label">shot distance (pick any)</div>
+      <div class="angle-grid" id="distanceGrid"></div>
+    </div>
+
+    <div class="facet-note" id="comboPreview"></div>
   </div>
 
   <button class="gen-btn" id="genBtn">generate prompts</button>
@@ -258,7 +330,8 @@
   <div class="footnote">
     <b>tip:</b> a fixed seed gets you thematic consistency across angles, not pixel-identical geometry — true multi-view consistency needs ControlNet/depth conditioning, which this builder doesn't do.<br>
     <b>z-image turbo:</b> keep the base block under ~60 words; it favors short lens/angle terms over long clauses.<br>
-    <b>flux2-klein-4b:</b> handles longer descriptive blocks and compositional language (foreground/background, rule of thirds) more reliably.
+    <b>flux2-klein-4b:</b> handles longer descriptive blocks and compositional language (foreground/background, rule of thirds) more reliably.<br>
+    <b>turnaround grid:</b> built for character/object sheets — picking all 8 rotations × 4 vertical angles × 3 distances generates 96 prompts at once, so narrow your selection down for anything you're queuing manually.
   </div>
 
 </div>
@@ -283,6 +356,48 @@ const ANGLES = [
                      fk:"dutch angle shot with a tilted horizon line, off-kilter framing that adds tension to the composition" },
 ];
 
+// Turnaround grid facets, sourced from multiple_angles.md
+const ROTATIONS = [
+  { id:"front",          label:"Front",                term:"front view" },
+  { id:"front-right",    label:"Front-right ¾",         term:"front-right quarter view" },
+  { id:"right",          label:"Right side",           term:"right side view" },
+  { id:"back-right",     label:"Back-right ¾",          term:"back-right quarter view" },
+  { id:"back",           label:"Back",                  term:"back view" },
+  { id:"back-left",      label:"Back-left ¾",           term:"back-left quarter view" },
+  { id:"left",           label:"Left side",             term:"left side view" },
+  { id:"front-left",     label:"Front-left ¾",          term:"front-left quarter view" },
+];
+const VERTICALS = [
+  { id:"low",      label:"Low-angle",  term:"low-angle shot" },
+  { id:"eye",      label:"Eye-level",  term:"eye-level shot" },
+  { id:"elevated", label:"Elevated",   term:"elevated shot" },
+  { id:"high",     label:"High-angle", term:"high-angle shot" },
+];
+const DISTANCES = [
+  { id:"closeup", label:"Close-up",   term:"close-up" },
+  { id:"medium",  label:"Medium shot",term:"medium shot" },
+  { id:"wide",    label:"Wide shot",  term:"wide shot" },
+];
+
+// ---------- mode toggle ----------
+let currentMode = "cinematic";
+const modeDescs = {
+  cinematic: "8 hand-picked cinematic compositions — wide, eye-level, drone, low, close-up, OTS, bird's-eye, dutch tilt.",
+  turnaround: "Rotation × vertical angle × shot distance, built for character/object turnaround sheets. Pick any combination of each facet — every combination gets its own prompt."
+};
+
+document.querySelectorAll(".mode-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".mode-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentMode = btn.dataset.mode;
+    document.getElementById("modeDesc").textContent = modeDescs[currentMode];
+    document.getElementById("cinematicPanel").style.display = currentMode === "cinematic" ? "" : "none";
+    document.getElementById("turnaroundPanel").style.display = currentMode === "turnaround" ? "" : "none";
+  });
+});
+
+// ---------- cinematic chip grid ----------
 const grid = document.getElementById("angleGrid");
 const defaultOn = new Set(["wide","eye","overhead","low","closeup"]);
 
@@ -298,60 +413,122 @@ ANGLES.forEach(a=>{
 });
 
 function updateCount(){
-  const n = document.querySelectorAll('.angle-chip input:checked').length;
+  const n = document.querySelectorAll('#angleGrid input:checked').length;
   document.getElementById("angleCount").textContent = `${n} selected`;
 }
 updateCount();
 
-function buildPrompts(){
-  const base = document.getElementById("baseScene").value.trim();
-  const model = document.getElementById("model").value;
-  const seed = document.getElementById("seed").value.trim();
-  const globalTags = document.getElementById("globalTags").value.trim();
-  const checked = Array.from(document.querySelectorAll('.angle-chip input:checked')).map(c=>c.value);
+// ---------- turnaround facet grids ----------
+function buildFacetGrid(containerId, items, defaultIds){
+  const container = document.getElementById(containerId);
+  items.forEach(item=>{
+    const chip = document.createElement("label");
+    const isOn = defaultIds.has(item.id);
+    chip.className = "angle-chip" + (isOn ? " active" : "");
+    chip.innerHTML = `<input type="checkbox" value="${item.id}" ${isOn?"checked":""}> ${item.label}`;
+    chip.querySelector("input").addEventListener("change", e=>{
+      chip.classList.toggle("active", e.target.checked);
+      updateTurnaroundCount();
+    });
+    container.appendChild(chip);
+  });
+}
 
-  const out = document.getElementById("output");
-  out.innerHTML = "";
+buildFacetGrid("rotationGrid", ROTATIONS, new Set(["front"]));
+buildFacetGrid("verticalGrid", VERTICALS, new Set(["eye"]));
+buildFacetGrid("distanceGrid", DISTANCES, new Set(["medium"]));
 
-  if(!base){
-    out.innerHTML = '<div class="empty">add a base scene description first</div>';
-    return [];
+function getCheckedIds(containerId){
+  return Array.from(document.querySelectorAll(`#${containerId} input:checked`)).map(c=>c.value);
+}
+
+function updateTurnaroundCount(){
+  const r = getCheckedIds("rotationGrid").length;
+  const v = getCheckedIds("verticalGrid").length;
+  const d = getCheckedIds("distanceGrid").length;
+  const total = r * v * d;
+  document.getElementById("turnaroundCount").textContent = `${total} selected`;
+  const preview = document.getElementById("comboPreview");
+  if(r === 0 || v === 0 || d === 0){
+    preview.textContent = "select at least one option in each facet";
+  } else {
+    preview.textContent = `${r} rotation${r>1?"s":""} × ${v} vertical angle${v>1?"s":""} × ${d} distance${d>1?"s":""} = ${total} prompt${total>1?"s":""}`;
   }
-  if(checked.length === 0){
-    out.innerHTML = '<div class="empty">select at least one angle</div>';
-    return [];
+}
+updateTurnaroundCount();
+
+// ---------- prompt assembly (hardened: filters empties, joins explicitly, never silently drops trailing characters) ----------
+function assemblePrompt(parts){
+  return parts
+    .map(p => (p || "").trim())
+    .filter(p => p.length > 0)
+    .join(", ");
+}
+
+function buildCinematicPrompts(base, model, seed, globalTags){
+  const checked = getCheckedIds("angleGrid");
+  if(checked.length === 0) return { error: "select at least one angle" };
+
+  const results = checked.map(id=>{
+    const angle = ANGLES.find(a=>a.id===id);
+    const clause = model === "z-image" ? angle.z : angle.fk;
+    const prompt = assemblePrompt([base, clause, globalTags]);
+    const meta = seed ? `seed: ${seed}` : "";
+    return { label: angle.label, prompt, meta };
+  });
+  return { results };
+}
+
+function buildTurnaroundPrompts(base, model, seed, globalTags){
+  const rotations = getCheckedIds("rotationGrid");
+  const verticals = getCheckedIds("verticalGrid");
+  const distances = getCheckedIds("distanceGrid");
+
+  if(rotations.length === 0 || verticals.length === 0 || distances.length === 0){
+    return { error: "select at least one option in each turnaround facet (rotation, vertical angle, shot distance)" };
   }
 
   const results = [];
+  rotations.forEach(rId=>{
+    const rot = ROTATIONS.find(r=>r.id===rId);
+    verticals.forEach(vId=>{
+      const vert = VERTICALS.find(v=>v.id===vId);
+      distances.forEach(dId=>{
+        const dist = DISTANCES.find(d=>d.id===dId);
+        const clause = `${rot.term}, ${vert.term}, ${dist.term}`;
+        const prompt = assemblePrompt([base, clause, globalTags]);
+        const label = `${rot.label} · ${vert.label} · ${dist.label}`;
+        const meta = seed ? `seed: ${seed}` : "";
+        results.push({ label, prompt, meta });
+      });
+    });
+  });
+  return { results };
+}
 
-  checked.forEach(id=>{
-    const angle = ANGLES.find(a=>a.id===id);
-    const clause = model === "z-image" ? angle.z : angle.fk;
-    let prompt = `${base}, ${clause}`;
-    if(globalTags) prompt += `, ${globalTags}`;
+function renderResults(results){
+  const out = document.getElementById("output");
+  out.innerHTML = "";
 
-    let meta = `lens/angle: ${angle.label}`;
-    if(seed) meta += `  ·  seed: ${seed}`;
-
-    results.push({label: angle.label, prompt, meta});
-
+  results.forEach(r=>{
     const card = document.createElement("div");
     card.className = "out-card";
     card.innerHTML = `
       <div class="out-head">
-        <span>${angle.label}</span>
-        <span class="lens">${meta.replace(`lens/angle: ${angle.label}`,"").replace(/^\s*·\s*/,"")}</span>
+        <span>${r.label}</span>
+        <span class="lens"></span>
       </div>
       <div class="out-body"></div>
     `;
-    card.querySelector(".out-body").textContent = prompt;
+    card.querySelector(".lens").textContent = r.meta;
+    card.querySelector(".out-body").textContent = r.prompt;
 
     const headRow = card.querySelector(".out-head");
     const copyBtn = document.createElement("button");
     copyBtn.className = "copy-btn";
     copyBtn.textContent = "copy";
     copyBtn.addEventListener("click", ()=>{
-      navigator.clipboard.writeText(prompt).then(()=>{
+      navigator.clipboard.writeText(r.prompt).then(()=>{
         copyBtn.textContent = "copied";
         copyBtn.classList.add("copied");
         setTimeout(()=>{copyBtn.textContent="copy"; copyBtn.classList.remove("copied");}, 1400);
@@ -361,7 +538,31 @@ function buildPrompts(){
 
     out.appendChild(card);
   });
+}
 
+function buildPrompts(){
+  const base = document.getElementById("baseScene").value.trim();
+  const model = document.getElementById("model").value;
+  const seed = document.getElementById("seed").value.trim();
+  const globalTags = document.getElementById("globalTags").value.trim();
+
+  const out = document.getElementById("output");
+
+  if(!base){
+    out.innerHTML = '<div class="empty">add a base scene description first</div>';
+    return [];
+  }
+
+  const { results, error } = currentMode === "cinematic"
+    ? buildCinematicPrompts(base, model, seed, globalTags)
+    : buildTurnaroundPrompts(base, model, seed, globalTags);
+
+  if(error){
+    out.innerHTML = `<div class="empty">${error}</div>`;
+    return [];
+  }
+
+  renderResults(results);
   return results;
 }
 
