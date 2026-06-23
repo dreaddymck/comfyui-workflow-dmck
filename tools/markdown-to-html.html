@@ -1,151 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MD/HTML Converter</title>
-    <!-- Include marked.js for Markdown parsing -->
-    <script src="js/marked.min.js"></script>
-    <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
-            background-color: #f4f4f9;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        .container {
-            display: flex;
-            gap: 20px;
-            flex-grow: 1;
-        }
-        .panel {
-            flex: 1;
-            background: white;
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        textarea {
-            width: 100%;
-            height: 300px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            resize: vertical;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .output-box {
-            background-color: #e9ecef;
-            min-height: 300px;
-            white-space: pre-wrap; /* Important for displaying raw HTML */
-            overflow: auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 4px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MD/HTML Converter</title>
+<!-- Include marked.js for Markdown parsing -->
+<script src="js/marked.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0e14;
+    --bg-panel: #10161f;
+    --bg-input: #0d1219;
+    --border: #1f2a38;
+    --border-active: #2a3b4d;
+    --text: #c9d6e3;
+    --text-dim: #6b7c91;
+    --amber: #e0a458;
+    --amber-dim: #b8854a;
+    --teal: #4fd1c5;
+    --teal-dim: #2f9e94;
+    --shadow: rgba(0, 0, 0, 0.5);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(79, 209, 197, 0.05), transparent 40%),
+      radial-gradient(circle at 80% 100%, rgba(224, 164, 88, 0.04), transparent 40%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  h1 {
+    text-align: center;
+    color: var(--teal);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 18px rgba(79, 209, 197, 0.25);
+    margin: 10px 0 4px;
+  }
+
+  h1::before {
+    content: "// ";
+    color: var(--amber-dim);
+  }
+
+  h2 {
+    color: var(--amber);
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+
+  h3 {
+    color: var(--teal-dim);
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .container {
+    display: flex;
+    gap: 20px;
+    flex-grow: 1;
+  }
+
+  .panel {
+    flex: 1;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px var(--shadow);
+    transition: border-color 0.2s ease;
+  }
+
+  .panel:hover {
+    border-color: var(--border-active);
+  }
+
+  textarea {
+    width: 100%;
+    height: 300px;
+    padding: 12px;
+    background-color: var(--bg-input);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: var(--teal-dim);
+    box-shadow: 0 0 0 1px rgba(79, 209, 197, 0.2);
+  }
+
+  textarea::placeholder {
+    color: var(--text-dim);
+  }
+
+  button {
+    padding: 10px 16px;
+    background-color: transparent;
+    color: var(--amber);
+    border: 1px solid var(--amber-dim);
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.15s ease;
+  }
+
+  button::before {
+    content: "▸ ";
+  }
+
+  button:hover {
+    background-color: rgba(224, 164, 88, 0.1);
+    border-color: var(--amber);
+    box-shadow: 0 0 12px rgba(224, 164, 88, 0.15);
+  }
+
+  button:active {
+    transform: translateY(1px);
+  }
+
+  .output-box {
+    background-color: var(--bg-input);
+    color: var(--teal);
+    min-height: 300px;
+    white-space: pre-wrap; /* Important for displaying raw HTML */
+    overflow: auto;
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .output-box:empty::before {
+    content: "// awaiting input";
+    color: var(--text-dim);
+  }
+</style>
 </head>
 <body>
 
-    <h1>Markdown & HTML Bidirectional Converter</h1>
+<h1>Markdown &amp; HTML Bidirectional Converter</h1>
 
-    <div class="container">
-        <div class="panel">
-            <h2>Markdown Input</h2>
-            <textarea id="markdownInput" placeholder="Paste your Markdown here..."></textarea>
-            <button onclick="convertMarkdownToHtml()">Convert MD to HTML</button>
-        </div>
+<div class="container">
+  <div class="panel">
+    <h2>Markdown Input</h2>
+    <textarea id="markdownInput" placeholder="Paste your Markdown here..."></textarea>
+    <button onclick="convertMarkdownToHtml()">Convert MD to HTML</button>
+  </div>
 
-        <div class="panel">
-            <h2>HTML Input</h2>
-            <textarea id="htmlInput" placeholder="Paste your HTML here..."></textarea>
-            <button onclick="convertHtmlToMarkdown()">Convert HTML to MD</button>
-        </div>
-    </div>
+  <div class="panel">
+    <h2>HTML Input</h2>
+    <textarea id="htmlInput" placeholder="Paste your HTML here..."></textarea>
+    <button onclick="convertHtmlToMarkdown()">Convert HTML to MD</button>
+  </div>
+</div>
 
-    <h2>Output</h2>
-    <div class="panel">
-        <h3>HTML Output:</h3>
-        <div id="htmlOutput" class="output-box"></div>
-    </div>
-    <div class="panel">
-        <h3>Markdown Output:</h3>
-        <div id="markdownOutput" class="output-box"></div>
-    </div>
+<h2>Output</h2>
 
-    <script>
-        const mdInput = document.getElementById('markdownInput');
-        const htmlInput = document.getElementById('htmlInput');
-        const htmlOutput = document.getElementById('htmlOutput');
-        const markdownOutput = document.getElementById('markdownOutput');
+<div class="panel">
+  <h3>HTML Output:</h3>
+  <div id="htmlOutput" class="output-box"></div>
+</div>
 
-        /**
-         * Function 1: Markdown to HTML
-         */
-        function convertMarkdownToHtml() {
-            const markdownText = mdInput.value;
-            if (!markdownText) {
-                alert("Please enter Markdown text.");
-                return;
-            }
+<div class="panel">
+  <h3>Markdown Output:</h3>
+  <div id="markdownOutput" class="output-box"></div>
+</div>
 
-            // Use marked.js to convert Markdown to HTML
-            const htmlResult = marked.parse(markdownText);
+<script>
+const mdInput = document.getElementById('markdownInput');
+const htmlInput = document.getElementById('htmlInput');
+const htmlOutput = document.getElementById('htmlOutput');
+const markdownOutput = document.getElementById('markdownOutput');
 
-            htmlOutput.textContent = htmlResult;
-            markdownOutput.textContent = "Conversion successful. Check HTML Output.";
-        }
+/**
+ * Function 1: Markdown to HTML
+ */
+function convertMarkdownToHtml() {
+    const markdownText = mdInput.value;
+    if (!markdownText) {
+        alert("Please enter Markdown text.");
+        return;
+    }
+    // Use marked.js to convert Markdown to HTML
+    const htmlResult = marked.parse(markdownText);
+    htmlOutput.textContent = htmlResult;
+    markdownOutput.textContent = "Conversion successful. Check HTML Output.";
+}
 
-        /**
-         * Function 2: HTML to Markdown (The complex part)
-         */
-        function convertHtmlToMarkdown() {
-            const htmlText = htmlInput.value;
-            if (!htmlText) {
-                alert("Please enter HTML text.");
-                return;
-            }
+/**
+ * Function 2: HTML to Markdown (The complex part)
+ */
+function convertHtmlToMarkdown() {
+    const htmlText = htmlInput.value;
+    if (!htmlText) {
+        alert("Please enter HTML text.");
+        return;
+    }
 
-            // --- CRITICAL NOTE ---
-            // Converting HTML back to clean Markdown is extremely complex.
-            // A perfect converter requires a full DOM parser to correctly handle
-            // nested elements, attributes, and edge cases.
-            // For this simple implementation, we use a very basic substitution.
+    // --- CRITICAL NOTE ---
+    // Converting HTML back to clean Markdown is extremely complex.
+    // A perfect converter requires a full DOM parser to correctly handle
+    // nested elements, attributes, and edge cases.
+    // For this simple implementation, we use a very basic substitution.
 
-            let markdownResult = "--- HTML to Markdown Conversion Attempted ---\n\n";
+    let markdownResult = "--- HTML to Markdown Conversion Attempted ---\n\n";
 
-            // Simple (and fragile) replacements:
-            markdownResult += htmlText.replace(/<h1>(.*?)<\/h1>/g, '# $1\n\n');
-            markdownResult += htmlText.replace(/<h2>(.*?)<\/h2>/g, '## $1\n\n');
-            markdownResult += htmlText.replace(/<p>(.*?)<\/p>/gs, '* $1\n');
-            markdownResult += htmlText.replace(/<strong>(.*?)<\/strong>/g, '**$1**');
+    // Simple (and fragile) replacements:
+    markdownResult += htmlText.replace(/<h1>(.*?)<\/h1>/g, '# $1\n\n');
+    markdownResult += htmlText.replace(/<h2>(.*?)<\/h2>/g, '## $1\n\n');
+    markdownResult += htmlText.replace(/<p>(.*?)<\/p>/gs, '* $1\n');
+    markdownResult += htmlText.replace(/<strong>(.*?)<\/strong>/g, '**$1**');
 
-            markdownOutput.textContent = markdownResult;
-        }
+    markdownOutput.textContent = markdownResult;
+}
 
-        // Initialize with some example text for testing
-        mdInput.value = "# Welcome to the App\n\nThis is **bold** text.\n\n- Item 1\n- Item 2";
-        htmlInput.value = "<h1>Main Title</h1>\n<p>This is a paragraph.</p>\n<p><strong>This is important.</strong></p>";
+// Initialize with some example text for testing
+mdInput.value = "# Welcome to the App\n\nThis is **bold** text.\n\n- Item 1\n- Item 2";
+htmlInput.value = "<h1>Main Title</h1>\n<p>This is a paragraph.</p>\n<p><strong>This is important.</strong></p>";
+</script>
 
-    </script>
 </body>
 </html>
