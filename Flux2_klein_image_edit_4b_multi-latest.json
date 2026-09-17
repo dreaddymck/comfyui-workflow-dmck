@@ -1,14 +1,14 @@
 {
   "id": "81f7e6cb-dfba-4fc1-8343-5925c290944f",
   "revision": 0,
-  "last_node_id": 222,
-  "last_link_id": 475,
+  "last_node_id": 231,
+  "last_link_id": 483,
   "nodes": [
     {
       "id": 75,
       "type": "7b34ab90-36f9-45ba-a665-71d418f0df18",
       "pos": [
-        1175,
+        1200,
         700
       ],
       "size": [
@@ -18,7 +18,7 @@
       "flags": {
         "collapsed": false
       },
-      "order": 10,
+      "order": 13,
       "mode": 4,
       "inputs": [
         {
@@ -41,9 +41,8 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            189,
-            420,
-            423
+            423,
+            476
           ]
         }
       ],
@@ -104,8 +103,8 @@
         1025
       ],
       "size": [
-        400,
-        400
+        425,
+        445
       ],
       "flags": {},
       "order": 1,
@@ -116,8 +115,8 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            365,
-            435
+            435,
+            480
           ]
         },
         {
@@ -139,7 +138,7 @@
         "secondTabWidth": 65
       },
       "widgets_values": [
-        "ComfyUI_temp_rdqqx_00005_.png",
+        "ComfyUI_00017_.png",
         "image"
       ]
     },
@@ -147,8 +146,8 @@
       "id": 81,
       "type": "LoadImage",
       "pos": [
-        750,
-        1675
+        700,
+        1575
       ],
       "size": [
         350,
@@ -163,7 +162,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            363
+            482
           ]
         },
         {
@@ -185,7 +184,7 @@
         "secondTabWidth": 65
       },
       "widgets_values": [
-        "openwebui_26-05-25-215831__00001_.png",
+        "mango-orage-front.png",
         "image"
       ]
     },
@@ -193,17 +192,17 @@
       "id": 92,
       "type": "65c22b29-59aa-496b-89c6-55a603658670",
       "pos": [
-        1150,
+        1100,
         1625
       ],
       "size": [
         500,
-        352
+        375
       ],
       "flags": {
         "collapsed": false
       },
-      "order": 12,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -234,8 +233,8 @@
           "type": "IMAGE",
           "links": [
             471,
-            474,
-            475
+            475,
+            477
           ]
         }
       ],
@@ -288,18 +287,18 @@
       "id": 97,
       "type": "MarkdownNote",
       "pos": [
-        -50,
-        1325
+        700,
+        2575
       ],
       "size": [
-        225,
-        50
+        253.5,
+        8
       ],
       "flags": {
         "collapsed": true
       },
       "order": 4,
-      "mode": 0,
+      "mode": 4,
       "inputs": [],
       "outputs": [],
       "properties": {},
@@ -313,21 +312,21 @@
       "id": 121,
       "type": "PlaySound|pysssss",
       "pos": [
-        1750,
-        675
+        1875,
+        700
       ],
       "size": [
         300,
-        195
+        200
       ],
       "flags": {},
-      "order": 13,
+      "order": 20,
       "mode": 4,
       "inputs": [
         {
           "name": "any",
           "type": "*",
-          "link": 189
+          "link": 483
         }
       ],
       "outputs": [
@@ -353,15 +352,15 @@
       "id": 123,
       "type": "AIO_Preprocessor",
       "pos": [
-        -150,
-        1600
+        250,
+        2050
       ],
       "size": [
         375,
         150
       ],
       "flags": {},
-      "order": 9,
+      "order": 10,
       "mode": 4,
       "inputs": [
         {
@@ -394,15 +393,15 @@
       "id": 124,
       "type": "PreviewImage",
       "pos": [
-        -125,
-        1800
+        300,
+        2250
       ],
       "size": [
         275,
         325
       ],
       "flags": {},
-      "order": 11,
+      "order": 12,
       "mode": 4,
       "inputs": [
         {
@@ -411,36 +410,13 @@
           "link": 201
         }
       ],
-      "outputs": [],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.17.0",
-        "Node name for S&R": "PreviewImage"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 144,
-      "type": "PreviewImage",
-      "pos": [
-        1725,
-        1600
-      ],
-      "size": [
-        600,
-        495
-      ],
-      "flags": {},
-      "order": 17,
-      "mode": 0,
-      "inputs": [
+      "outputs": [
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 474
+          "links": null
         }
       ],
-      "outputs": [],
       "properties": {
         "cnr_id": "comfy-core",
         "ver": "0.17.0",
@@ -452,21 +428,21 @@
       "id": 165,
       "type": "ImageResizeKJv2",
       "pos": [
-        250,
-        1625
+        225,
+        1500
       ],
       "size": [
         400,
-        500
+        445
       ],
       "flags": {},
-      "order": 7,
+      "order": 8,
       "mode": 4,
       "inputs": [
         {
           "name": "image",
           "type": "IMAGE",
-          "link": 363
+          "link": 482
         },
         {
           "name": "mask",
@@ -505,7 +481,7 @@
         "Node name for S&R": "ImageResizeKJv2"
       },
       "widgets_values": [
-        1024,
+        768,
         768,
         "nearest-exact",
         "resize",
@@ -519,21 +495,21 @@
       "id": 166,
       "type": "ImageResizeKJv2",
       "pos": [
-        250,
-        950
-      ],
-      "size": [
-        375,
+        725,
         525
       ],
+      "size": [
+        400,
+        420
+      ],
       "flags": {},
-      "order": 8,
-      "mode": 0,
+      "order": 11,
+      "mode": 4,
       "inputs": [
         {
           "name": "image",
           "type": "IMAGE",
-          "link": 365
+          "link": 481
         },
         {
           "name": "mask",
@@ -574,10 +550,10 @@
         "Node name for S&R": "ImageResizeKJv2"
       },
       "widgets_values": [
-        1024,
-        768,
+        512,
+        512,
         "nearest-exact",
-        "resize",
+        false,
         "0, 0, 0",
         "center",
         2,
@@ -585,39 +561,10 @@
       ]
     },
     {
-      "id": 193,
-      "type": "PreviewImage",
-      "pos": [
-        1725,
-        950
-      ],
-      "size": [
-        600,
-        500
-      ],
-      "flags": {},
-      "order": 14,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 420
-        }
-      ],
-      "outputs": [],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.20.1",
-        "Node name for S&R": "PreviewImage"
-      },
-      "widgets_values": []
-    },
-    {
       "id": 195,
       "type": "ImageCompare",
       "pos": [
-        2400,
+        2425,
         650
       ],
       "size": [
@@ -653,18 +600,18 @@
       "id": 203,
       "type": "PrimitiveStringMultiline",
       "pos": [
-        -50,
-        1125
+        1275,
+        2575
       ],
       "size": [
-        225,
-        50
+        289.3166809082031,
+        8
       ],
       "flags": {
         "collapsed": true
       },
       "order": 2,
-      "mode": 0,
+      "mode": 4,
       "inputs": [],
       "outputs": [
         {
@@ -686,18 +633,18 @@
       "id": 211,
       "type": "PrimitiveStringMultiline",
       "pos": [
-        -50,
-        1225
+        950,
+        2575
       ],
       "size": [
-        225,
-        50
+        289.3166809082031,
+        8
       ],
       "flags": {
         "collapsed": true
       },
       "order": 3,
-      "mode": 0,
+      "mode": 4,
       "inputs": [],
       "outputs": [
         {
@@ -712,18 +659,18 @@
         "Node name for S&R": "PrimitiveStringMultiline"
       },
       "widgets_values": [
-        "<sks> front view low-angle shot close-up\n<sks> front-right quarter view low-angle shot close-up\n<sks> right side view low-angle shot close-up\n<sks> back-right quarter view low-angle shot close-up\n<sks> back view low-angle shot close-up\n<sks> back-left quarter view low-angle shot close-up\n<sks> left side view low-angle shot close-up\n<sks> front-left quarter view low-angle shot close-up\n<sks> front view eye-level shot close-up\n<sks> front-right quarter view eye-level shot close-up\n<sks> right side view eye-level shot close-up\n<sks> back-right quarter view eye-level shot close-up\n<sks> back view eye-level shot close-up\n<sks> back-left quarter view eye-level shot close-up\n<sks> left side view eye-level shot close-up\n<sks> front-left quarter view eye-level shot close-up\n<sks> front view elevated shot close-up\n<sks> front-right quarter view elevated shot close-up\n<sks> right side view elevated shot close-up\n<sks> back-right quarter view elevated shot close-up\n<sks> back view elevated shot close-up\n<sks> back-left quarter view elevated shot close-up\n<sks> left side view elevated shot close-up\n<sks> front-left quarter view elevated shot close-up\n<sks> front view high-angle shot close-up\n<sks> front-right quarter view high-angle shot close-up\n<sks> right side view high-angle shot close-up\n<sks> back-right quarter view high-angle shot close-up\n<sks> back view high-angle shot close-up\n<sks> back-left quarter view high-angle shot close-up\n<sks> left side view high-angle shot close-up\n<sks> front-left quarter view high-angle shot close-up\n<sks> front view low-angle shot medium shot\n<sks> front-right quarter view low-angle shot medium shot\n<sks> right side view low-angle shot medium shot\n<sks> back-right quarter view low-angle shot medium shot\n<sks> back view low-angle shot medium shot\n<sks> back-left quarter view low-angle shot medium shot\n<sks> left side view low-angle shot medium shot\n<sks> front-left quarter view low-angle shot medium shot\n<sks> front view eye-level shot medium shot\n<sks> front-right quarter view eye-level shot medium shot\n<sks> right side view eye-level shot medium shot\n<sks> back-right quarter view eye-level shot medium shot\n<sks> back view eye-level shot medium shot\n<sks> back-left quarter view eye-level shot medium shot\n<sks> left side view eye-level shot medium shot\n<sks> front-left quarter view eye-level shot medium shot\n<sks> front view elevated shot medium shot\n<sks> front-right quarter view elevated shot medium shot\n<sks> right side view elevated shot medium shot\n<sks> back-right quarter view elevated shot medium shot\n<sks> back view elevated shot medium shot\n<sks> back-left quarter view elevated shot medium shot\n<sks> left side view elevated shot medium shot\n<sks> front-left quarter view elevated shot medium shot\n<sks> front view high-angle shot medium shot\n<sks> front-right quarter view high-angle shot medium shot\n<sks> right side view high-angle shot medium shot\n<sks> back-right quarter view high-angle shot medium shot\n<sks> back view high-angle shot medium shot\n<sks> back-left quarter view high-angle shot medium shot\n<sks> left side view high-angle shot medium shot\n<sks> front-left quarter view high-angle shot medium shot\n<sks> front view low-angle shot wide shot\n<sks> front-right quarter view low-angle shot wide shot\n<sks> right side view low-angle shot wide shot\n<sks> back-right quarter view low-angle shot wide shot\n<sks> back view low-angle shot wide shot\n<sks> back-left quarter view low-angle shot wide shot\n<sks> left side view low-angle shot wide shot\n<sks> front-left quarter view low-angle shot wide shot\n<sks> front view eye-level shot wide shot\n<sks> front-right quarter view eye-level shot wide shot\n<sks> right side view eye-level shot wide shot\n<sks> back-right quarter view eye-level shot wide shot\n<sks> back view eye-level shot wide shot\n<sks> back-left quarter view eye-level shot wide shot\n<sks> left side view eye-level shot wide shot\n<sks> front-left quarter view eye-level shot wide shot\n<sks> front view elevated shot wide shot\n<sks> front-right quarter view elevated shot wide shot\n<sks> right side view elevated shot wide shot\n<sks> back-right quarter view elevated shot wide shot\n<sks> back view elevated shot wide shot\n<sks> back-left quarter view elevated shot wide shot\n<sks> left side view elevated shot wide shot\n<sks> front-left quarter view elevated shot wide shot\n<sks> front view high-angle shot wide shot\n<sks> front-right quarter view high-angle shot wide shot\n<sks> right side view high-angle shot wide shot\n<sks> back-right quarter view high-angle shot wide shot\n<sks> back view high-angle shot wide shot\n<sks> back-left quarter view high-angle shot wide shot\n<sks> left side view high-angle shot wide shot\n<sks> front-left quarter view high-angle shot wide shot"
+        ""
       ]
     },
     {
       "id": 213,
       "type": "5108a495-a1ec-43d9-81f0-078e48c46786",
       "pos": [
-        1175,
+        1200,
         1125
       ],
       "size": [
-        475,
+        525,
         350
       ],
       "flags": {
@@ -800,10 +747,10 @@
       ],
       "size": [
         900,
-        770
+        775
       ],
       "flags": {},
-      "order": 16,
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
@@ -831,12 +778,12 @@
       "id": 221,
       "type": "d07207e3-d147-4cc5-8afe-801a9d03f356",
       "pos": [
-        1150,
-        2025
+        1075,
+        2075
       ],
       "size": [
-        500,
-        320
+        600,
+        370
       ],
       "flags": {
         "collapsed": false
@@ -907,12 +854,12 @@
       "id": 222,
       "type": "PlaySound|pysssss",
       "pos": [
-        1725,
-        2150
+        1800,
+        2175
       ],
       "size": [
-        270,
-        172
+        450,
+        175
       ],
       "flags": {},
       "order": 18,
@@ -942,38 +889,162 @@
         1,
         "notify.mp3"
       ]
+    },
+    {
+      "id": 224,
+      "type": "SaveImage",
+      "pos": [
+        1750,
+        950
+      ],
+      "size": [
+        600,
+        500
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 476
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            483
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 225,
+      "type": "SaveImage",
+      "pos": [
+        1725,
+        1600
+      ],
+      "size": [
+        600,
+        500
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 477
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "flux2-klein-multi"
+      ]
+    },
+    {
+      "id": 227,
+      "type": "ReActorRestoreFace",
+      "pos": [
+        300,
+        750
+      ],
+      "size": [
+        350,
+        200
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 480
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            481
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ReActorRestoreFace"
+      },
+      "widgets_values": [
+        "retinaface_resnet50",
+        "codeformer.pth",
+        0.5,
+        0.75
+      ]
+    },
+    {
+      "id": 231,
+      "type": "Fast Groups Bypasser (rgthree)",
+      "pos": [
+        40.73220595212437,
+        1084.6515311510034
+      ],
+      "size": [
+        450,
+        274
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "OPT_CONNECTION",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "matchColors": "",
+        "matchTitle": "",
+        "showNav": true,
+        "showAllGraphs": true,
+        "sort": "position",
+        "customSortAlphabet": "",
+        "toggleRestriction": "default"
+      }
     }
   ],
   "links": [
-    [
-      189,
-      75,
-      0,
-      121,
-      0,
-      "IMAGE"
-    ],
     [
       201,
       123,
       0,
       124,
-      0,
-      "IMAGE"
-    ],
-    [
-      363,
-      81,
-      0,
-      165,
-      0,
-      "IMAGE"
-    ],
-    [
-      365,
-      76,
-      0,
-      166,
       0,
       "IMAGE"
     ],
@@ -990,14 +1061,6 @@
       165,
       0,
       123,
-      0,
-      "IMAGE"
-    ],
-    [
-      420,
-      75,
-      0,
-      193,
       0,
       "IMAGE"
     ],
@@ -1066,18 +1129,58 @@
       "STRING"
     ],
     [
-      474,
-      92,
-      0,
-      144,
-      0,
-      "IMAGE"
-    ],
-    [
       475,
       92,
       0,
       222,
+      0,
+      "IMAGE"
+    ],
+    [
+      476,
+      75,
+      0,
+      224,
+      0,
+      "IMAGE"
+    ],
+    [
+      477,
+      92,
+      0,
+      225,
+      0,
+      "IMAGE"
+    ],
+    [
+      480,
+      76,
+      0,
+      227,
+      0,
+      "IMAGE"
+    ],
+    [
+      481,
+      227,
+      0,
+      166,
+      0,
+      "IMAGE"
+    ],
+    [
+      482,
+      81,
+      0,
+      165,
+      0,
+      "IMAGE"
+    ],
+    [
+      483,
+      224,
+      0,
+      121,
       0,
       "IMAGE"
     ]
@@ -1085,36 +1188,84 @@
   "groups": [
     {
       "id": 3,
-      "title": "Multiple input example（Select all nodes then Ctrl-B to enable/disable）",
+      "title": "Image Edit Multiple",
       "bounding": [
-        675,
-        1500,
-        2700,
-        875
+        690,
+        1505,
+        2595,
+        950
       ],
       "color": "#3f789e",
       "flags": {}
     },
     {
       "id": 5,
-      "title": "Group",
+      "title": "Image Edit Single",
       "bounding": [
-        1150,
-        575,
-        2225,
-        900
+        1190,
+        580,
+        2145,
+        905
       ],
       "color": "#3f789e",
       "flags": {}
     },
     {
       "id": 10,
-      "title": "Group",
+      "title": "Pose",
       "bounding": [
-        -175,
-        1550,
-        380,
-        580
+        225,
+        1975,
+        425,
+        625
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 11,
+      "title": "Resize image 2",
+      "bounding": [
+        225,
+        1425,
+        420.00000000000006,
+        525
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 12,
+      "title": "Resize image 1",
+      "bounding": [
+        700,
+        450,
+        420,
+        500
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 13,
+      "title": "Face Restore Image 1",
+      "bounding": [
+        300,
+        675,
+        370,
+        280
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 14,
+      "title": "Notes",
+      "bounding": [
+        700,
+        2500,
+        884.3166809082031,
+        88
       ],
       "color": "#3f789e",
       "flags": {}
@@ -1126,9 +1277,9 @@
         "id": "7b34ab90-36f9-45ba-a665-71d418f0df18",
         "version": 1,
         "state": {
-          "lastGroupId": 10,
-          "lastNodeId": 222,
-          "lastLinkId": 475,
+          "lastGroupId": 14,
+          "lastNodeId": 231,
+          "lastLinkId": 483,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -2023,7 +2174,7 @@
               "secondTabWidth": 65
             },
             "widgets_values": [
-              "dpmpp_2m_sde_gpu"
+              "euler"
             ]
           },
           {
@@ -2429,9 +2580,9 @@
         "id": "65c22b29-59aa-496b-89c6-55a603658670",
         "version": 1,
         "state": {
-          "lastGroupId": 10,
-          "lastNodeId": 222,
-          "lastLinkId": 475,
+          "lastGroupId": 14,
+          "lastNodeId": 231,
+          "lastLinkId": 483,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -3543,7 +3694,7 @@
             },
             "widgets_values": [
               0,
-              "randomize"
+              "fixed"
             ]
           },
           {
@@ -3700,7 +3851,7 @@
               "default",
               true,
               true,
-              "sageattn"
+              "none"
             ]
           },
           {
@@ -4102,9 +4253,9 @@
         "id": "5108a495-a1ec-43d9-81f0-078e48c46786",
         "version": 1,
         "state": {
-          "lastGroupId": 10,
-          "lastNodeId": 222,
-          "lastLinkId": 475,
+          "lastGroupId": 14,
+          "lastNodeId": 231,
+          "lastLinkId": 483,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -4309,7 +4460,7 @@
               "Node name for S&R": "PrimitiveString"
             },
             "widgets_values": [
-              ""
+              "--ar 16:9 --style raw --s 850"
             ]
           },
           {
@@ -4351,7 +4502,7 @@
               "Node name for S&R": "ShowText|pysssss"
             },
             "widgets_values": [
-              "Hyper realistic Tropical beach, palm trees, clear blue water, sunny day. High quality, eye-level shot"
+              "--ar 16:9 --style raw --s 850\n\"Transform this image into A modern digital art comic cover illustration of happy young woman posing and pointing at the mangoes seen in rustic, sunlit Jamaican fruit market stall, featuring soft pastel or warm color palettes, clean white background, and smooth gradients; a photorealistic yet stylized aesthetic with sharp focus and natural lighting\""
             ]
           },
           {
@@ -4437,7 +4588,7 @@
               "Node name for S&R": "PrimitiveStringMultiline"
             },
             "widgets_values": [
-              "Hyper realistic Tropical beach, palm trees, clear blue water, sunny day. High quality, eye-level shot"
+              "\"Transform this image into A modern digital art comic cover illustration of happy young woman posing and pointing at the mangoes seen in rustic, sunlit Jamaican fruit market stall, featuring soft pastel or warm color palettes, clean white background, and smooth gradients; a photorealistic yet stylized aesthetic with sharp focus and natural lighting\""
             ]
           },
           {
@@ -4567,9 +4718,9 @@
         "id": "d07207e3-d147-4cc5-8afe-801a9d03f356",
         "version": 1,
         "state": {
-          "lastGroupId": 10,
-          "lastNodeId": 222,
-          "lastLinkId": 475,
+          "lastGroupId": 14,
+          "lastNodeId": 231,
+          "lastLinkId": 483,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -4659,7 +4810,7 @@
             ],
             "size": [
               300,
-              350
+              436
             ],
             "flags": {},
             "order": 0,
@@ -4774,7 +4925,7 @@
               "Node name for S&R": "PrimitiveString"
             },
             "widgets_values": [
-              "--ar 16:9 --style raw --s 850"
+              "-style raw --s 850"
             ]
           },
           {
@@ -4816,7 +4967,7 @@
               "Node name for S&R": "ShowText|pysssss"
             },
             "widgets_values": [
-              "--ar 16:9 --style raw --s 850\n\"remove the girl from image 2, place her on the beach from image 1, portrait shot\""
+              "-style raw --s 850\n\"Dynamic medium-body shot of a young woman posing confidently beside a rustic, sunlit tropical Jamaican fruit market stall. She is looking directly at the camera with a strong, engaging expression. The scene is filled with vibrant colors of tropical fruits (bananas, mangoes, etc.). Golden hour lighting, high energy, professional photography style, detailed textures of wood and produce.\""
             ]
           },
           {
@@ -4828,7 +4979,7 @@
             ],
             "size": [
               275,
-              75
+              108
             ],
             "flags": {},
             "order": 3,
@@ -4902,7 +5053,7 @@
               "Node name for S&R": "PrimitiveStringMultiline"
             },
             "widgets_values": [
-              "\"remove the girl from image 2, place her on the beach from image 1, portrait shot\""
+              "\"replace the man's t-shirt with the t-shirt from image 2, maintain everything else\""
             ]
           },
           {
@@ -5033,18 +5184,21 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.781964022754252,
+      "scale": 0.32730414746543773,
       "offset": [
-        -525.4389433578773,
-        -1347.2149123472743
+        1245.1856393681828,
+        -78.33333333333326
       ]
     },
-    "frontendVersion": "1.45.15",
+    "frontendVersion": "1.45.19",
     "workflowRendererVersion": "LG",
     "VHS_latentpreview": false,
     "VHS_latentpreviewrate": 0,
     "VHS_MetadataImage": true,
-    "VHS_KeepIntermediate": true
+    "VHS_KeepIntermediate": true,
+    "favoritedWidgets": {
+      "favorites": []
+    }
   },
   "version": 0.4
 }

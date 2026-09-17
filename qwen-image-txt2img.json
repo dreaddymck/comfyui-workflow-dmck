@@ -1,0 +1,1263 @@
+{
+  "id": "68375b17-c65d-48e6-9943-aa696c5116b9",
+  "revision": 0,
+  "last_node_id": 146,
+  "last_link_id": 280,
+  "nodes": [
+    {
+      "id": 93,
+      "type": "CLIPTextEncode",
+      "pos": [
+        300,
+        -650
+      ],
+      "size": [
+        475,
+        175
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 280
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [
+            238
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.24.0",
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "jpeg compression"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 94,
+      "type": "VAELoader",
+      "pos": [
+        -200,
+        -650
+      ],
+      "size": [
+        425,
+        125
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "slot_index": 0,
+          "links": [
+            267
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.24.0",
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "Qwen_Image-VAE.safetensors"
+      ]
+    },
+    {
+      "id": 95,
+      "type": "KSampler",
+      "pos": [
+        825,
+        -1125
+      ],
+      "size": [
+        325,
+        400
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 278
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 237
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 238
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 239
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            266
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.24.0",
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        509079391304656,
+        "randomize",
+        4,
+        1,
+        "euler",
+        "simple",
+        1
+      ]
+    },
+    {
+      "id": 97,
+      "type": "EmptyHunyuanLatentVideo",
+      "pos": [
+        300,
+        -425
+      ],
+      "size": [
+        475,
+        220
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            239
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.24.0",
+        "Node name for S&R": "EmptyHunyuanLatentVideo"
+      },
+      "widgets_values": [
+        1664,
+        928,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 100,
+      "type": "CLIPTextEncode",
+      "pos": [
+        325,
+        -1150
+      ],
+      "size": [
+        234.75,
+        8
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 279
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": 273
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [
+            237
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.24.0",
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 124,
+      "type": "UnetLoaderGGUF",
+      "pos": [
+        -225,
+        -1200
+      ],
+      "size": [
+        450,
+        145
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            277
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-gguf",
+        "ver": "1.1.10",
+        "Node name for S&R": "UnetLoaderGGUF"
+      },
+      "widgets_values": [
+        "Qwen_Image_Edit-Q2_K.gguf"
+      ]
+    },
+    {
+      "id": 126,
+      "type": "VAEDecodeTiled",
+      "pos": [
+        825,
+        -625
+      ],
+      "size": [
+        325,
+        175
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "showAdvanced": false,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 266
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 267
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            272
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.24.0",
+        "Node name for S&R": "VAEDecodeTiled"
+      },
+      "widgets_values": [
+        512,
+        64,
+        64,
+        8
+      ]
+    },
+    {
+      "id": 130,
+      "type": "SaveImage",
+      "pos": [
+        1200,
+        -1350
+      ],
+      "size": [
+        700,
+        920
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 272
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            275,
+            276
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.26.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "Fit Image to Node"
+      ]
+    },
+    {
+      "id": 131,
+      "type": "Note",
+      "pos": [
+        -250,
+        -450
+      ],
+      "size": [
+        500,
+        245
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "Resolution: Use higher, square, or wide/tall presets rather than standard sizes to give the model enough pixel density to draw letters (e.g., 1328×1328 or 1664×928).Prompting: Be extremely specific with your text; place the exact words you want rendered in quotes, and keep negative prompts brief to avoid confusing the layout\n\nLightning LoRA, use 4-8 steps and a CFG of 1.0. If you bypass the LoRA, use 15-30 steps and a CFG of 2.5–4.0"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 139,
+      "type": "5c5c4b09-376f-4181-b70e-0312ff1e0fbb",
+      "pos": [
+        300,
+        -1100
+      ],
+      "size": [
+        475,
+        400
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "prepend",
+          "name": "value",
+          "type": "STRING",
+          "widget": {
+            "name": "value"
+          },
+          "link": null
+        },
+        {
+          "label": "prompt",
+          "name": "value_1",
+          "type": "STRING",
+          "widget": {
+            "name": "value_1"
+          },
+          "link": null
+        },
+        {
+          "label": "append",
+          "name": "value_2",
+          "type": "STRING",
+          "widget": {
+            "name": "value_2"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            273
+          ]
+        }
+      ],
+      "properties": {
+        "proxyWidgets": [
+          [
+            "14",
+            "value"
+          ],
+          [
+            "15",
+            "value"
+          ],
+          [
+            "91",
+            "value"
+          ]
+        ],
+        "cnr_id": "comfy-core",
+        "ver": "0.25.1"
+      },
+      "widgets_values": [],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 140,
+      "type": "easy clearCacheAll",
+      "pos": [
+        1250,
+        -325
+      ],
+      "size": [
+        250,
+        100
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 275
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": [
+            274
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "5ec3b5ef861fe45c4e9966d17c4546e943417723",
+        "Node name for S&R": "easy clearCacheAll"
+      },
+      "widgets_values": [],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 141,
+      "type": "easy cleanGpuUsed",
+      "pos": [
+        1625,
+        -325
+      ],
+      "size": [
+        225,
+        75
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 274
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "5ec3b5ef861fe45c4e9966d17c4546e943417723",
+        "Node name for S&R": "easy cleanGpuUsed"
+      },
+      "widgets_values": [],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 142,
+      "type": "PlaySound|pysssss",
+      "pos": [
+        825,
+        -400
+      ],
+      "size": [
+        325,
+        200
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "any",
+          "type": "*",
+          "link": 276
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "shape": 6,
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "609f3afaa74b2f88ef9ce8d939626065e3247469",
+        "Node name for S&R": "PlaySound|pysssss"
+      },
+      "widgets_values": [
+        "always",
+        1,
+        "notify.mp3"
+      ]
+    },
+    {
+      "id": 143,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        300,
+        -1375
+      ],
+      "size": [
+        550,
+        170
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 277
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            278
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.27.0",
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "Qwen-Image-fp8-e4m3fn-Lightning-4steps-V1.0-fp32.safetensors",
+        1
+      ]
+    },
+    {
+      "id": 145,
+      "type": "ClipLoaderGGUF",
+      "pos": [
+        -225,
+        -1000
+      ],
+      "size": [
+        450,
+        196
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "showAdvanced": true,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            279,
+            280
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "gguf",
+        "ver": "080e4ee22410687bb644c8aa8da7d808fe267fce",
+        "Node name for S&R": "ClipLoaderGGUF"
+      },
+      "widgets_values": [
+        "qwen/Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf",
+        "qwen_image",
+        "default"
+      ]
+    }
+  ],
+  "links": [
+    [
+      237,
+      100,
+      0,
+      95,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      238,
+      93,
+      0,
+      95,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      239,
+      97,
+      0,
+      95,
+      3,
+      "LATENT"
+    ],
+    [
+      266,
+      95,
+      0,
+      126,
+      0,
+      "LATENT"
+    ],
+    [
+      267,
+      94,
+      0,
+      126,
+      1,
+      "VAE"
+    ],
+    [
+      272,
+      126,
+      0,
+      130,
+      0,
+      "IMAGE"
+    ],
+    [
+      273,
+      139,
+      0,
+      100,
+      1,
+      "STRING"
+    ],
+    [
+      274,
+      140,
+      0,
+      141,
+      0,
+      "*"
+    ],
+    [
+      275,
+      130,
+      0,
+      140,
+      0,
+      "IMAGE"
+    ],
+    [
+      276,
+      130,
+      0,
+      142,
+      0,
+      "IMAGE"
+    ],
+    [
+      277,
+      124,
+      0,
+      143,
+      0,
+      "MODEL"
+    ],
+    [
+      278,
+      143,
+      0,
+      95,
+      0,
+      "MODEL"
+    ],
+    [
+      279,
+      145,
+      0,
+      100,
+      0,
+      "CLIP"
+    ],
+    [
+      280,
+      145,
+      0,
+      93,
+      0,
+      "CLIP"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 6,
+      "title": "Group",
+      "bounding": [
+        1200,
+        -400,
+        700,
+        200
+      ],
+      "color": "#444",
+      "flags": {}
+    }
+  ],
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "5c5c4b09-376f-4181-b70e-0312ff1e0fbb",
+        "version": 1,
+        "state": {
+          "lastGroupId": 6,
+          "lastNodeId": 146,
+          "lastLinkId": 280,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Prompt prepend/append",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            562,
+            616,
+            128,
+            108
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1800,
+            616,
+            128,
+            68
+          ]
+        },
+        "inputs": [
+          {
+            "id": "bf55e94c-75c6-429f-940e-fbcc8bc78242",
+            "name": "value",
+            "type": "STRING",
+            "linkIds": [
+              44
+            ],
+            "label": "prepend",
+            "pos": [
+              666,
+              640
+            ]
+          },
+          {
+            "id": "7ec1771e-b432-4fe3-8bcc-a9bcc0fbeef0",
+            "name": "value_1",
+            "type": "STRING",
+            "linkIds": [
+              45
+            ],
+            "label": "prompt",
+            "pos": [
+              666,
+              660
+            ]
+          },
+          {
+            "id": "370b56d8-1c3b-491f-9448-8f6da8f4365c",
+            "name": "value_2",
+            "type": "STRING",
+            "linkIds": [
+              48
+            ],
+            "label": "append",
+            "pos": [
+              666,
+              680
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "0c51e29d-b9da-4da3-bb05-b634511c5544",
+            "name": "STRING",
+            "type": "STRING",
+            "linkIds": [
+              47
+            ],
+            "pos": [
+              1824,
+              640
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 21,
+            "type": "easy promptList",
+            "pos": [
+              1075,
+              400
+            ],
+            "size": [
+              300,
+              450
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "optional_prompt_list",
+                "name": "optional_prompt_list",
+                "shape": 7,
+                "type": "LIST",
+                "link": null
+              },
+              {
+                "localized_name": "prompt_1",
+                "name": "prompt_1",
+                "type": "STRING",
+                "widget": {
+                  "name": "prompt_1"
+                },
+                "link": 36
+              },
+              {
+                "localized_name": "prompt_2",
+                "name": "prompt_2",
+                "type": "STRING",
+                "widget": {
+                  "name": "prompt_2"
+                },
+                "link": 37
+              },
+              {
+                "localized_name": "prompt_3",
+                "name": "prompt_3",
+                "type": "STRING",
+                "widget": {
+                  "name": "prompt_3"
+                },
+                "link": 38
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "prompt_list",
+                "name": "prompt_list",
+                "type": "LIST",
+                "links": []
+              },
+              {
+                "localized_name": "prompt_strings",
+                "name": "prompt_strings",
+                "shape": 6,
+                "type": "STRING",
+                "links": [
+                  42
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfyui-easy-use",
+              "ver": "625efbfa2fc20c31797dfffcbb41a26b6d91ab7b",
+              "Node name for S&R": "easy promptList"
+            },
+            "widgets_values": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "color": "#233",
+            "bgcolor": "#355"
+          },
+          {
+            "id": 14,
+            "type": "PrimitiveString",
+            "pos": [
+              750,
+              400
+            ],
+            "size": [
+              275,
+              125
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "value",
+                "name": "value",
+                "type": "STRING",
+                "widget": {
+                  "name": "value"
+                },
+                "link": 44
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "STRING",
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  36
+                ]
+              }
+            ],
+            "title": "Prepend",
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              ""
+            ]
+          },
+          {
+            "id": 22,
+            "type": "ShowText|pysssss",
+            "pos": [
+              1425,
+              425
+            ],
+            "size": [
+              325,
+              450
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "text",
+                "name": "text",
+                "type": "STRING",
+                "link": 43
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "STRING",
+                "name": "STRING",
+                "shape": 6,
+                "type": "STRING",
+                "links": [
+                  47
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfyui-custom-scripts",
+              "ver": "609f3afaa74b2f88ef9ce8d939626065e3247469",
+              "Node name for S&R": "ShowText|pysssss"
+            },
+            "widgets_values": [
+              "\"vibrant glass of fresh mango juice with juicy chunks of mango, glass of orange juice, a bowl of brown sugar with a spoon and lemon/limes arranged on a clean, minimalist white table. A small glass of water is visible nearby. High detail, bright natural lighting, food photography style, close-up shot, shallow depth of field, 85mm macro look, 8k\";--ar 16:9 "
+            ]
+          },
+          {
+            "id": 23,
+            "type": "StringListToString",
+            "pos": [
+              1100,
+              900
+            ],
+            "size": [
+              275,
+              125
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "string_list",
+                "name": "string_list",
+                "type": "STRING",
+                "link": 42
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "STRING",
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  43
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfyui-impact-pack",
+              "ver": "8.28.3",
+              "Node name for S&R": "StringListToString"
+            },
+            "widgets_values": [
+              ";"
+            ]
+          },
+          {
+            "id": 15,
+            "type": "PrimitiveStringMultiline",
+            "pos": [
+              750,
+              550
+            ],
+            "size": [
+              300,
+              200
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "value",
+                "name": "value",
+                "type": "STRING",
+                "widget": {
+                  "name": "value"
+                },
+                "link": 45
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "STRING",
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  37
+                ]
+              }
+            ],
+            "title": "Prompt",
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "PrimitiveStringMultiline"
+            },
+            "widgets_values": [
+              "\"vibrant glass of fresh mango juice with juicy chunks of mango, glass of orange juice, a bowl of brown sugar with a spoon and lemon/limes arranged on a clean, minimalist white table. A small glass of water is visible nearby. High detail, bright natural lighting, food photography style, close-up shot, shallow depth of field, 85mm macro look, 8k\""
+            ]
+          },
+          {
+            "id": 91,
+            "type": "PrimitiveString",
+            "pos": [
+              750,
+              800
+            ],
+            "size": [
+              275,
+              125
+            ],
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "value",
+                "name": "value",
+                "type": "STRING",
+                "widget": {
+                  "name": "value"
+                },
+                "link": 48
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "STRING",
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  38
+                ]
+              }
+            ],
+            "title": "Append",
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              "--ar 16:9 "
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 36,
+            "origin_id": 14,
+            "origin_slot": 0,
+            "target_id": 21,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 37,
+            "origin_id": 15,
+            "origin_slot": 0,
+            "target_id": 21,
+            "target_slot": 2,
+            "type": "STRING"
+          },
+          {
+            "id": 38,
+            "origin_id": 91,
+            "origin_slot": 0,
+            "target_id": 21,
+            "target_slot": 3,
+            "type": "STRING"
+          },
+          {
+            "id": 42,
+            "origin_id": 21,
+            "origin_slot": 1,
+            "target_id": 23,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 43,
+            "origin_id": 23,
+            "origin_slot": 0,
+            "target_id": 22,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 44,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 14,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 45,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 15,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 47,
+            "origin_id": 22,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 48,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 91,
+            "target_slot": 0,
+            "type": "STRING"
+          }
+        ],
+        "extra": {}
+      }
+    ]
+  },
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.5393258426966292,
+      "offset": [
+        701.6250000000002,
+        1733.322916666667
+      ]
+    },
+    "frontendVersion": "1.45.20",
+    "groupNodes": {},
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}
